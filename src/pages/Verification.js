@@ -1,4 +1,4 @@
-import "../css/Dashboard.css";
+import "../css/Verification.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { query, collection, getDocs, where } from "firebase/firestore";
 import Banner from "../components/Header";
 import Footer from '../components/Footer';
 
-function Dashboard() {
+function Verification() {
   const [user, loading] = useAuthState(auth);
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
@@ -92,72 +92,69 @@ function Dashboard() {
   // }, [user, loading]);
 
   return (
-    <div className="dashboard__container dark-mode">
+  <div>
       <div className="banner__container">
         <Banner />
       </div>
-      <div className="row">
-        <h2>
-          Antes de comenzar por favor ingresa tu CUIT
-        </h2>
-        <input
-        type="text"
-        placeholder="CUIT"
-        onChange={(e) => setCuit(e.target.value)}
-      />
-      {cuitError && <span className="error">{cuitError}</span>}
-      </div>
-      <div className="row">
-        <p className="version">v.1.0.0</p>
-      </div>
-      <div className="row">
-        <h3 className="datos-personales">
-          Consentimiento para el uso de datos personales
+      <div className="verification__container">
+        <div className="row">
+          <h2>
+            Antes de comenzar por favor ingresa tu CUIT
+          </h2>
           <input
-            type="checkbox"
-            id="checkbox"
-            onChange={() => setChecked(!checked)}
+          type="text"
+          placeholder="CUIT"
+          onChange={(e) => setCuit(e.target.value)}
           />
-          <br />
-          {checked ? "" : " (Debe seleccionar el checkbox)"}
-          <button onClick={handleVerMasClick}>
-            {showFullText ? "Cerrar" : "Ver más"}
+          {cuitError && <span className="error">{cuitError}</span>}
+        </div>
+        <div className="row">
+          <button
+            className={checked ? "btn" : "btn disabled"}
+            onClick={() => {
+              if (cuit) {
+                checkCuitAvailability();
+                if (!cuitError) {
+                  navigate("/clientform");
+                }
+              }
+            }}
+            disabled={!checked}
+          >Solicitar crédito
           </button>
-          {showFullText && (
-            <div>
-              <p className="datos-personales">
-                Continuar con el siguiente formulario expresa CONSENTIMIENTO
-                para el registro y uso de mis datos personales.
-              </p>
-            </div>
-          )}
-        </h3>
-        <button
-        className={checked ? "btn" : "btn disabled"}
-        onClick={() => {
-          if (cuit) {
-            checkCuitAvailability();
-            if (!cuitError) {
-              navigate("/screen1");
-            }
-          }
-        }}
-        disabled={!checked}
-      >
-          <h3>
-            Presiona aquí para comenzar
-          </h3>
-        </button>
+        </div>
+        <div className="row">
+          <div className="row">
+            <p className="datos-personales">
+              Consentimiento para el uso de datos personales
+              <input
+                type="checkbox"
+                id="checkbox"
+                onChange={() => setChecked(!checked)}
+              />
+              <br />
+              {checked ? "" : " (Debe seleccionar el checkbox)"}
+              <br />
+              <button onClick={handleVerMasClick}>
+                {showFullText ? "Cerrar" : "Ver más"}
+              </button>
+              {showFullText && (
+                <div>
+                  <p className="datos-personales">
+                    Continuar con el siguiente formulario expresa CONSENTIMIENTO
+                    para el registro y uso de mis datos personales.
+                  </p>
+                </div>
+              )}
+            </p>
+          </div>
+        </div>
       </div>
-      <div>
-        {showFooter && (
-          <div className="footer__container">
-            <Footer />
-            </div>
-        )}
-      </div>
+    <div className="footer__container">
+      <Footer />
     </div>
+  </div>
   );
 }
 
-export default Dashboard;
+export default Verification;

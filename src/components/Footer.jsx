@@ -6,7 +6,7 @@ function Footer() {
 
 return (
     <div className='footer-container'>
-        <Link to="/dashboard">
+        <Link to="/">
             <button className='btn-reiniciar'>Reiniciar formulario</button>
         </Link>
     </div>

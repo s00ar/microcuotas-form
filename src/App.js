@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import Reset from "./pages/Reset";
 import Register from "./pages/Register";
 import Report from "./pages/Report";
-import Dashboard from "./pages/Dashboard";
+import Verification from "./pages/Verification";
 import './css/App.css';
 import firebaseApp from "./firebase";
 import ClientForm from './pages/ClientForm';
@@ -14,7 +14,7 @@ const App = () => {
     <div className="App">
         <Router basename={process.env.PUBLIC_URL}>
           <Routes>
-            <Route exact path="/" element={<Dashboard />} />
+            <Route exact path="/" element={<Verification />} />
             <Route path="/clientform" element={<ClientForm />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/reset" element={<Reset />} />

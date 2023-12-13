@@ -1,9 +1,27 @@
 .login {
-    height: 100vh;
+    height: 65vh;
     width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.login__buttons{
+    display: grid;
+    gap: 2rem;
+    width: 100%;
+    max-width: 384px;
+    margin: auto;
+}
+.login__buttons button{
+    font-size: 1.3rem;
+    padding: 2rem;
+    border-radius: 25px;
+    opacity: 0.3;
+}
+.login__buttons button:hover{
+    transform: scale(0.9);
+    transition-duration: 100ms;
+    opacity: 1;
 }
 .login__container {
     display: flex;
@@ -30,4 +48,6 @@
 }
 .login div {
     margin-top: 7px;
+    border-radius: 25px;
+    background-color: rgb(5, 5, 144);
 }

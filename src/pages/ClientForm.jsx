@@ -205,7 +205,7 @@ const ClientForm = () => {
               </label>
             </div>
           </div>
-        <button type="submit">Enviar</button>
+        <button className='form__btn' type="submit">Enviar</button>
       </form>
 
       <div className="footer__container">

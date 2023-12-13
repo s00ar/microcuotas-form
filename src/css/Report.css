@@ -4,7 +4,7 @@
 }
 .admin-title-card{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
 }
 .admin-title{
@@ -14,8 +14,8 @@
     text-shadow: 2px 2px 2px #6b6a6a;
 }
 .admin-title h2{
-    font: 100;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    padding-left: 2rem;
 }
 .container__chart{
     display: flex;

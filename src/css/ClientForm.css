@@ -40,22 +40,22 @@ body {
     text-align: center;
   }
   
-  form {
+  .form__container form {
     gap: 10px;
     align-items: center;
   }
   
-  label {
+  .form__container label {
     margin-bottom: 5px;
   }
   
-  input[type='text'],
-  input[type='number'],
-  input[type='tel'],
-  input[type='email'],
-  select,
-  input[type='file'],
-  input[type='date'] {
+  .form__container input[type='text'],
+  .form__container input[type='number'],
+  .form__container input[type='tel'],
+  .form__container input[type='email'],
+  .form__container select,
+  .form__container input[type='file'],
+  .form__container input[type='date'] {
     width: 100%;
     padding: 2px;
     margin: 5px;
@@ -64,7 +64,7 @@ body {
     border-radius: 2px;
   }
   
-  button {
+  .form__btn {
     padding: 10px;
     background-color: #007bff;
     color: #fff;
@@ -78,7 +78,7 @@ body {
     margin-bottom: 3rem;  
   }
   
-  button:hover {
+  .form__btn:hover {
     background-color: #0056b3;
   }
   

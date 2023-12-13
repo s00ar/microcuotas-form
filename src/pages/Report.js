@@ -4,13 +4,12 @@ import { auth, db, fetchContactsData, logout } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { query, collection, getDocs, where, addDoc } from "firebase/firestore";
 import { QuerySnapshot } from "firebase/firestore";
-import '../css/Admin.css';
+import '../css/Report.css';
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { InfinitySpin } from "react-loader-spinner";
-import GenderPieChart from "../components/GenderPieChart";
-import AgeBarChart from "../components/AgeBarChart";
 import UserRegisteredBar from "../components/UserRegisteredBar";
 import SubmitApexChart from "../components/SubmitApexChart";
+
 const iconStyle = {
   cursor: "pointer",
 };
@@ -431,8 +430,8 @@ useEffect(() => {
         
       <div className="innderNav">
           <div className="admin-title-card">
-          <h1 className="admin-title"> Criss Assist</h1>
-
+          <h1 className="admin-title"> MicroCuotas</h1>
+          <br/>
           <h2 className="admin-title">Herramienta de Reportes</h2>
           </div>
         <button className="btn-admin">
@@ -457,8 +456,6 @@ useEffect(() => {
       )}
       {!loader && (
         <div className="container__chart" >
-          <GenderPieChart Genders={Genders} />
-          <AgeBarChart AgeChartData={AgeChartData} />
           {/* <UserRegisteredBar registerPerDay={registerPerDay} /> */}
           <SubmitApexChart registerPerDay={registerPerDay} />
 
