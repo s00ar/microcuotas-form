@@ -1,23 +1,24 @@
-.logo1 {
+.header {
     background-image: linear-gradient(to bottom, black, rgb(59, 8, 130));
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
   
-  .logo1 img {
+  .header img {
     height: 120px;
   }
   
-  .logo1 .barra-navegacion {
+  .header .barra-navegacion {
     width: 100%;
-    height: 50px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  .logo1 .barra-navegacion a {
+  .header .barra-navegacion a {
     text-decoration: none;
     color: rgb(179, 209, 255);
     padding: 1rem;

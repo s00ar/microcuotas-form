@@ -4,7 +4,7 @@ import '../css/Header.css';
 
 function Header() {
   return (
-    <div className="logo1">
+    <div className="header">
       <img src={Logo} />
       <div className="barra-navegacion">
         <a href="#">Inicio</a>

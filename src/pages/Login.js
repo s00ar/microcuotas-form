@@ -11,30 +11,30 @@ const [user, loading, error] = useAuthState(auth);
 
 const navigate = useNavigate();
 
-const navigateAdminUser = async () => {
-    if(user && await isAdmin(user.uid)){
+// const navigateAdminUser = async () => {
+//     if(user && user.uid && await isAdmin(user.uid)){
         
-            // Checks if the user role is admin
-            // alert("Its admin");
-        navigate("/admin");
-    }else if(user && user.uid && await isReport(user.uid)){
-        // Checks if the user role is admin
-        // alert("Its report user");
-        navigate("/report");
-    } else {
-        // alert("You are just a user");
-        navigate("/");
-    }
-}
+//             // Checks if the user role is admin
+//             // alert("Its admin");
+//         navigate("/admin");
+//     }else if(user && user.uid && await isReport(user.uid)){
+//         // Checks if the user role is admin
+//         // alert("Its report user");
+//         navigate("/report");
+//     } else {
+//         // alert("You are just a user");
+//         navigate("/");
+//     }
+// }
 
-useEffect(() => {
-    if (loading) {
-    // maybe trigger a loading screen
-    return;
-    }
-    navigateAdminUser();
-    // if (user) navigate("/dashboard");
-}, [user, loading]);
+// useEffect(() => {
+//     if (loading) {
+//     // maybe trigger a loading screen
+//     return;
+//     }
+//     navigateAdminUser();
+//     // if (user) navigate("/dashboard");
+// }, [user, loading]);
 
 return (
     <div className="login">

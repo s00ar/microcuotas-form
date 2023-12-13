@@ -43,7 +43,7 @@
     padding: 10px;
 }
 .btn-admin{
-    background-color: #E36F1E;
+    background-color: #2b1ee3;
     text-decoration: none;
     border-radius: 6rem;
     padding: .8rem;
@@ -53,7 +53,7 @@
     box-shadow:#575757 .2rem .2rem ;
 }
 .btn-admin:hover {
-    background-color: #E36F1E ;
+    background-color: #321ee3 ;
     transition: background-color 0.3s ease;
 }
 
@@ -166,6 +166,6 @@
     }
     .table__content {
         width: 90%;
-        overflow: auto;
+        /* overflow: auto; */
     }
 }

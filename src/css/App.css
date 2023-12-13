@@ -1,7 +1,6 @@
-* {
-  will-change: auto;
+*{
+  overflow-x:hidden ;
 }
-
 html {
   background-color: #fff;
 }

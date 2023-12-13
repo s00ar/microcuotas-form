@@ -46,11 +46,11 @@ function Dashboard() {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.size > 0) {
-      setCuitError("El CUIT ya está registrado.");
+      setCuitError("El CUIT ya está registrado. Solo se puede ingresar una solicitud cada 30 días");
       return;
     } else {
       setCuitError("");
-      navigate("/screen1");      
+      navigate("/clientform");      
     }
   };
 
@@ -85,11 +85,11 @@ function Dashboard() {
     }
   }, [cuit]);
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/login");
-    fetchUserName();
-  }, [user, loading]);
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (!user) return navigate("/login");
+  //   fetchUserName();
+  // }, [user, loading]);
 
   return (
     <div className="dashboard__container dark-mode">
