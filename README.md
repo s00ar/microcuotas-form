@@ -24,7 +24,6 @@ In the SRC project directory:
 │       Header.jsx
 │
 ├───css
-│       Admin.css
 │       App.css
 │       Dashboard.css
 │       Footer.css
@@ -34,7 +33,6 @@ In the SRC project directory:
 │       Reset.css
 │
 ├───pages
-│       Admin.js
 │       ClientForm.jsx
 │       Dashboard.js
 │       Login.js
@@ -56,9 +54,6 @@ Within this folder you can find the imports.js file.
 
 ### `pages`
 
-** Admin.js **
-This is the main dashboard for the admin user. The idea is that the user can use this dashboard to get the list of users who submited the form.
-
 ** ClientForm.jsx **
 Main form where loan seeker users will fill their contact information and all the documents requiered to fulfill their requested loans.
 
@@ -71,6 +66,7 @@ Main entry point for the app. This page should display a field called CUIT where
 ** Register.js **
 
 ** Report.js **
+This is the main dashboard for the admin user. The idea is that the user can use this dashboard to get the list of users who submited the form.
 
 ** Reset.js **
 
