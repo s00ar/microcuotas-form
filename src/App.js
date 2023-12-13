@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Reset from "./pages/Reset";
 import Register from "./pages/Register";
-import Admin from "./pages/Admin";
 import Report from "./pages/Report";
 import Dashboard from "./pages/Dashboard";
 import './css/App.css';
@@ -21,7 +20,6 @@ const App = () => {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/reset" element={<Reset />} />
             <Route exact path="/register" element={<Register />} />
-            <Route exact path="/admin" element={<Admin />} />
             <Route exact path="/report" element={<Report />} />
           </Routes>
         </Router>

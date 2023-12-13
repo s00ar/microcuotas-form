@@ -720,16 +720,6 @@ useEffect(() => {
       <h1>{selected.name}</h1>
       <p>Teléfono: {selected.phoneNumber}</p>
       <p>Documento: {selected.id}</p>
-      <p>Edad: {selected.age}</p>
-      <p>Género: {selected.gender}</p>
-      <p>Nota personal: {selected.personalNote}</p>
-      <p>
-          Nota de voz:
-      </p>
-      <audio controls>
-        <source src={selected.voiceNoteUrl} type="audio/mpeg" />
-        Tu navegador no soporta etiquetas de audio.
-      </audio>
       <br/>
       <button onClick={() => setShow(false)}>Cerrar</button>
     </div>
