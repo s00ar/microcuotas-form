@@ -1,43 +1,79 @@
-# Getting Started with Create React App
+# Loans pre aproval form
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Scripts Structure
 
-In the project directory, you can run:
+In the SRC project directory:
 
-### `npm start`
+│   App.css
+│   App.js
+│   App.test.js
+│   firebase.js
+│   index.css
+│   index.js
+│   reportWebVitals.js
+│   setupTests.js
+│
+├───assets
+│       logo-blanco.png
+│       logo_textoblanco_fondotransp.png
+│
+├───components
+│       Footer.jsx
+│       Header.jsx
+│
+├───css
+│       App.css
+│       Dashboard.css
+│       Footer.css
+│       Header.css
+│       Login.css
+│       Register.css
+│       Reset.css
+│
+├───pages
+│       ClientForm.jsx
+│       Dashboard.js
+│       Login.js
+│       Register.js
+│       Report.js
+│       Reset.js
+│
+└───utils
+        imports.js
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### `CSS`
 
-### `npm test`
+In this folder there are style for each component and each view that needs it
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `utils`
 
-### `npm run build`
+Within this folder you can find the imports.js file.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### `pages`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+** ClientForm.jsx **
+Main form where loan seeker users will fill their contact information and all the documents requiered to fulfill their requested loans.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+** Dashboard.js **
+Main entry point for the app. This page should display a field called CUIT where user will enter their unique goverment ids (CUIT) and the web app should check the database in order to make sure this id was not used in the last month.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+** Login.js **
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+** Register.js **
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+** Report.js **
+This is the main dashboard for the admin user. The idea is that the user can use this dashboard to get the list of users who submited the form.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+** Reset.js **
+
+### `components`
+
+In this directory you can find both the Footer and Header files for use trought the project 
+
 
 ## Learn More
 
