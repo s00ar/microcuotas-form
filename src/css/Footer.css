@@ -1,0 +1,23 @@
+.footer-container {
+    background-image: linear-gradient(to bottom, black, blue);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    height: 150px;
+  }
+  
+  .btn-reiniciar {
+    background-color: #87CEFA; 
+    color: black;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .btn-restart span {
+    margin-left: 0.5rem;
+  }
+  
