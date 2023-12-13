@@ -12,17 +12,17 @@ const [user, loading, error] = useAuthState(auth);
 const navigate = useNavigate();
 
 const navigateAdminUser = async () => {
-    if(user && user.uid && await isAdmin(user.uid)){
+    if(user && await isAdmin(user.uid)){
         
             // Checks if the user role is admin
-            alert("Its admin");
+            // alert("Its admin");
         navigate("/admin");
     }else if(user && user.uid && await isReport(user.uid)){
         // Checks if the user role is admin
-        alert("Its report user");
+        // alert("Its report user");
         navigate("/report");
     } else {
-        alert("You are just a user");
+        // alert("You are just a user");
         navigate("/");
     }
 }
