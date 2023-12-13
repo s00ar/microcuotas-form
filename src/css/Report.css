@@ -2,26 +2,28 @@
     background-color: #f4b12217;
     width: 100%;
 }
-.admin-title-card{
+.admin__title__card{
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 60%;
 }
-.admin-title{
+.admin__title{
     color: rgb(253, 253, 253);
     font: bolder;
     font-size: 2rem;
     text-shadow: 2px 2px 2px #6b6a6a;
+    padding: 2rem;
 }
-.admin-title h2{
+.admin__title h2{
     font-size: 1rem;
-    padding-left: 2rem;
 }
 .container__chart{
     display: flex;
     justify-content: space-between;
     width: 98%;
     scale: 0.7;
+    flex-direction: row;
 }
 .chart__titles{
     text-align: center;
@@ -35,14 +37,18 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    width: 100%;
+    flex-direction: row;
 }
-.innderNav{
+.admin__button{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
+    flex-direction: row;
+    max-width: 40%;
 }
-.btn-admin{
+
+.btn__admin{
+    display: flex;
+    flex-direction: column;
     background-color: #2b1ee3;
     text-decoration: none;
     border-radius: 6rem;
@@ -52,12 +58,12 @@
     border: 0;
     box-shadow:#575757 .2rem .2rem ;
 }
-.btn-admin:hover {
+.btn__admin:hover {
     background-color: #321ee3 ;
     transition: background-color 0.3s ease;
 }
 
-.btn-admin-text{
+.btn__admin__text{
     color: #fff;
     text-decoration: none;
     font-weight: 700;
@@ -82,10 +88,13 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }
-    .btn-admin{
+    .admin__button{
+        display: flex;
+        flex-direction: row;
+        max-width: 40%;
+    }
+    .btn__admin{
         margin: 10px;
     }
     .ChartContainer{
@@ -114,7 +123,7 @@
         justify-content: center;
         align-items: center;
     }
-    .btn-admin{
+    .btn__admin{
         margin: 10px;
     }
     .ChartContainer{
@@ -155,7 +164,7 @@
         justify-content: center;
         align-items: center;
     }
-    .btn-admin{
+    .btn__admin{
         margin: 10px;
     }
     .ChartContainer{

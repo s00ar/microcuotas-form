@@ -429,23 +429,25 @@ useEffect(() => {
       <nav className="nav__container">
         
       <div className="innderNav">
-          <div className="admin-title-card">
-          <h1 className="admin-title"> MicroCuotas</h1>
-          <br/>
-          <h2 className="admin-title">Herramienta de Reportes</h2>
+          <div className="admin__title__card">
+            <h1 className="admin__title"> MicroCuotas</h1>
+            <br/>
+            <h2 className="admin__title">Herramienta de Reportes</h2>
           </div>
-        <button className="btn-admin">
-          <Link className="btn-admin-text" to="/dashboard">
-                <h3>
-                INICIAR FORMULARIO
-                </h3>
-            </Link>
-          </button>
-          <button className="btn-admin">
-            <a className="btn-admin-text" onClick={logout} href="/login">
-                SALIR
-            </a>
-          </button>
+          <div className="admin__button">
+              <button className="btn__admin">
+              <Link className="btn__admin__text" to="/login">
+                  <h3>
+                  Volver a login
+                  </h3>
+              </Link>
+            </button>
+            <button className="btn__admin">
+              <a className="btn__admin__text" onClick={logout} href="/login">
+                  Salir
+              </a>
+            </button>
+          </div>
         </div>
       </nav>
       
