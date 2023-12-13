@@ -9,6 +9,7 @@ import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { InfinitySpin } from "react-loader-spinner";
 import UserRegisteredBar from "../components/UserRegisteredBar";
 import SubmitApexChart from "../components/SubmitApexChart";
+import Logo from '../assets/logo_textoblanco_fondotransp.png';
 
 const iconStyle = {
   cursor: "pointer",
@@ -425,21 +426,16 @@ useEffect(() => {
 
   return (
     <div className="admin-background">
-
       <nav className="nav__container">
-        
-      <div className="innderNav">
+        <div className="innderNav">
           <div className="admin__title__card">
-            <h1 className="admin__title"> MicroCuotas</h1>
-            <br/>
+            <img className="admin__logo" src={Logo} />
             <h2 className="admin__title">Herramienta de Reportes</h2>
           </div>
-          <div className="admin__button">
+          <div className="admin__button__container">
               <button className="btn__admin">
               <Link className="btn__admin__text" to="/login">
-                  <h3>
                   Volver a login
-                  </h3>
               </Link>
             </button>
             <button className="btn__admin">
@@ -458,7 +454,7 @@ useEffect(() => {
       )}
       {!loader && (
         <div className="container__chart" >
-          {/* <UserRegisteredBar registerPerDay={registerPerDay} /> */}
+          <UserRegisteredBar registerPerDay={registerPerDay} />
           <SubmitApexChart registerPerDay={registerPerDay} />
 
 
