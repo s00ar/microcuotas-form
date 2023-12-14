@@ -101,6 +101,7 @@ function Verification() {
           <h2>
             Antes de comenzar por favor ingresa tu CUIT
           </h2>
+          <br/>
           <input
           type="text"
           placeholder="CUIT"
@@ -119,35 +120,8 @@ function Verification() {
                 }
               }
             }}
-            disabled={!checked}
           >Solicitar crédito
           </button>
-        </div>
-        <div className="row">
-          <div className="row">
-            <p className="datos-personales">
-              Consentimiento para el uso de datos personales
-              <input
-                type="checkbox"
-                id="checkbox"
-                onChange={() => setChecked(!checked)}
-              />
-              <br />
-              {checked ? "" : " (Debe seleccionar el checkbox)"}
-              <br />
-              <button onClick={handleVerMasClick}>
-                {showFullText ? "Cerrar" : "Ver más"}
-              </button>
-              {showFullText && (
-                <div>
-                  <p className="datos-personales">
-                    Continuar con el siguiente formulario expresa CONSENTIMIENTO
-                    para el registro y uso de mis datos personales.
-                  </p>
-                </div>
-              )}
-            </p>
-          </div>
         </div>
       </div>
     <div className="footer__container">
