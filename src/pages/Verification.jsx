@@ -27,7 +27,6 @@ function Verification() {
   };
 
   const checkCuitAvailability = async () => {
-    if (!cuit) return;
 
     const q = query(collection(db, "users"), where("cuit", "==", cuit));
     const querySnapshot = await getDocs(q);
@@ -82,7 +81,14 @@ function Verification() {
           <button
             className="btn"
             onClick={() => {
+              if (!cuit){
+                alert("CUIT field it's empty")
+                return;
+              }
               if (cuit) {
+                if(cuit.length > 11){
+                  alert("CUIT it's shorter than 11 characters")
+                  return;}
                 checkCuitAvailability();
                 if (!cuitError) {
                   navigate("/clientform");
