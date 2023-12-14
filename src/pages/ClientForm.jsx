@@ -91,7 +91,7 @@ const ClientForm = () => {
 
     // Luego de completar la subida de todas las imágenes, guardar datos en Firebase Database
     // Utiliza los datos capturados en los estados para enviarlos a la base de datos
-    // Ejemplo:
+
     db.ref('clientes').push({
       nombre,
       apellido,

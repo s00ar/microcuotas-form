@@ -6,9 +6,6 @@ import { query, collection, getDocs, where, addDoc } from "firebase/firestore";
 import { QuerySnapshot } from "firebase/firestore";
 import '../css/Report.css';
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
-import { InfinitySpin } from "react-loader-spinner";
-import UserRegisteredBar from "../components/UserRegisteredBar";
-import SubmitApexChart from "../components/SubmitApexChart";
 import Logo from '../assets/logo_textoblanco_fondotransp.png';
 
 const iconStyle = {
@@ -34,41 +31,7 @@ export default function Admin() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [page, setPage] = useState(0);
-  const [ageGroup, setAgeGroup] = useState(null);
-  const [loader, setLoader] = useState(true);
-  const [registerPerDay, setRegisterPerDay] = useState([]);
-  const [Genders, setGenders] = useState([
-    { name:'Masculino', value:0},
-    { name:'Femenino', value:0},
-    { name:'Otro', value:0},
-    { name:'No especificado', value:0},
-  ]);
-  const [AgeChartData, setAgeChartData] = useState([
- {
-    name: "Edad 1-15",
-    uv: 0,
-    pv: 800,
-    amt: 1400,
-  },
-  {
-    name: "Edad 16-30",
-    uv: 0,
-    pv: 967,
-    amt: 1506,
-  },
-  {
-    name: "Edad 31-60",
-    uv: 0,
-    pv: 1098,
-    amt: 989,
-  },
-  {
-    name: "Edad 60+",
-    uv: 0,
-    pv: 1200,
-    amt: 1228,
-  },
-]);
+  const [hijos, setHijos] = useState(false);
 
   const PAGESIZE =10
 
@@ -79,129 +42,6 @@ export default function Admin() {
     let _ =records.slice( min, max)
     setpaginatedrecords(_)
   }, [page])
-
-  const filterGender = (fetchedData) => {
-    fetchedData.forEach(item => {
- switch (item.gender) {
-   case 'masculino':
-     setGenders((prevState) => {
-       const updatedGenders = prevState.map((gender) => {
-         if (gender.name === "Masculino") {
-           return { ...gender, value: gender.value + 1 };
-         } else {
-           return gender;
-         }
-       });
-       return updatedGenders;
-     });
-
-     break;
-   case 'femenino':
-     
-      setGenders((prevState) => {
-        const updatedGenders = prevState.map((gender) => {
-          if (gender.name === "Femenino") {
-            return { ...gender, value: gender.value + 1 };
-          } else {
-            return gender;
-          }
-        });
-        return updatedGenders;
-      });
-
-     break;
-   case 'otro':
-     setGenders((prevState) => {
-       const updatedGenders = prevState.map((gender) => {
-         if (gender.name === "Otro") {
-           return { ...gender, value: gender.value + 1 };
-         } else {
-           return gender;
-         }
-       });
-       return updatedGenders;
-     });
-
-     break;
-   default:
-      setGenders((prevState) => {
-        const updatedGenders = prevState.map((gender) => {
-          if (gender.name === "No especificado") {
-            return { ...gender, value: gender.value + 1 };
-          } else {
-            return gender;
-          }
-        });
-        return updatedGenders;
-      });
-
-     break;
-   
- }
-});
-setLoader(false)
- }
-
-const groupAge = (fetchedData) => {
-let ageinInt = []
-fetchedData.forEach(item => {
- ageinInt.push(parseInt(item.age))
-})
-ageinInt.forEach((item) => {
- 
- if(item >= 1 && item <= 15){
-   setAgeChartData((prevState) => {
-     const updatedAgeChartData = prevState.map((age) => {
-       if (age.name === "Edad 1-15") {
-           return { ...age, uv: age.uv + 1 };
-       } else {
-         return age;
-       }
-     });
-     return updatedAgeChartData;
-   });
- }
- else
- if(item >= 16 && item <= 30){
-   setAgeChartData((prevState) => {
-     const updatedAgeChartData = prevState.map((age) => {
-       if (age.name === "Edad 16-30") {
-           return { ...age, uv: age.uv + 1 };
-       } else {
-         return age;
-       }
-     });
-     return updatedAgeChartData;
-   });
- }
- else if(item >= 31 && item <= 60){
-   setAgeChartData((prevState) => {
-     const updatedAgeChartData = prevState.map((age) => {
-       if (age.name === "Edad 31-60") {
-           return { ...age, uv: age.uv + 1 };
-       } else {
-         return age;
-       }
-     });
-     return updatedAgeChartData;
-   });
- }
- else 
- {
-   setAgeChartData((prevState) => {
-     const updatedAgeChartData = prevState.map((age) => {
-       if (age.name === "Edad 60+") {
-           return { ...age, uv: age.uv + 1 };
-       } else {
-         return age;
-       }
-     });
-     return updatedAgeChartData;
-   });
- }
-})
-
-}
 
   const checkAuth = async () => {
     if (!user) return navigate("/login");
@@ -224,17 +64,17 @@ ageinInt.forEach((item) => {
     setpaginatedrecords(rows.slice(0,PAGESIZE))
   };
 
-  const getTime = (time) => {
+  const getTime = (fechaSolicitud) => {
     const fireBaseTime = new Date(
-      time.seconds * 1000 + time.nanoseconds / 1000000,
+      fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000,
     );
     const date = fireBaseTime.toDateString()+" " +fireBaseTime.toLocaleTimeString()
     return date;
   }
   
-const getDay = (time) => {
+const getDay = (fechaSolicitud) => {
   const fireBaseTime = new Date(
-    time.seconds * 1000 + time.nanoseconds / 1000000
+    fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000
   );
   const date = fireBaseTime.toDateString();
   return date;
@@ -242,37 +82,41 @@ const getDay = (time) => {
 
   const toExport = () => {
     let header = [
-      "name",
-      "age",
-      "id",
-      "assistanceReceived",
-      "assistanceType",
-      "feedback",
-      "gender",
-      "generalNote",
-      "personalNote",
-      "phoneNumber",
-      "privacy",
-      "time",
-      "voiceNoteUrl",
+      "nombre",
+      "apellido",
+      "cuil",
+      "telefono",
+      "mail",
+      "estadoCivil",
+      "hijos",
+      "ocupacion",
+      "ingresoMensual",
+      "antiguedad",
+      "fechaNacimiento",
+      "fechaSolicitud",
+      "dniFrente",
+      "dniDorso",
+      "retratoDni",
       "\n"
     ]
     let csvRows = records.map(e=>{
       let _ = []
-      _[0] = e.name
-      _[1] = e.age
-      _[2] = e.id
-      _[3] = `"${e.assistanceReceived}"`
-      _[4] = `"${e.assistanceType}"`
-      _[5] = `"${e.feedback}"`
-      _[6] = e.gender
-      _[7] = `"${e.generalNote}"`
-      _[8] = `"${e.personalNote}"` 
-      _[9] = e.phoneNumber
-      _[10] = e.privacy
+      _[0] = e.nombre
+      _[1] = e.apellido
+      _[2] = e.cuil
+      _[3] = e.telefono
+      _[4] = e.mail
+      _[5] = `"${e.estadoCivil}"` 
+      _[6] = e.hijos ? e.hijos : ""
+      _[7] = `"${e.ocupacion}"`
+      _[8] = e.ingresoMensual
+      _[9] = `"${e.antiguedad}"`
+      _[10] = `"${e.fechaNacimiento}"`
       _[11] = getTime(e.timestamp)
-      _[12] = e.voiceNoteUrl
-      _[13]="\n"
+      _[12] = e.dniFrente
+      _[13] = e.dniDorso
+      _[14] = e.retratoDni
+      _[15]="\n"
       return _
   })  
       var pom = document.createElement('a');
@@ -284,98 +128,12 @@ const getDay = (time) => {
       alert("Archivo exportado correctamente")
   }
 
-// create a function to handle number of registered users per day
-const filterRegisteredUsers = (data) => {
-  let days = [];
-  let count = 0;
-  data.map((item) => {
-    days.push(getDay(item.timestamp));
-  });
-  let uniqueDays = [...new Set(days)];
-  uniqueDays.map((item) => {
-    count = 0;
-    days.map((day) => {
-      if (item === day) {
-        count++;
-      }
-    });
-    if (!registerPerDay.some((e) => e.day === item)) {
-      registerPerDay.push({ day: item, count: count });
-    } else {
-      registerPerDay.map((e) => {
-        if (e.day === item) {
-          e.count = count;
-        }
-      });
-    }
-  
-  });
-
-};
-
-
 useEffect(() => {
     const min = page * PAGESIZE;
     const max = page * PAGESIZE + PAGESIZE;
     let _ = records.slice(min, max);
     setpaginatedrecords(_);
   }, [page]);
-
-useEffect(() => {
-  switch (ageGroup) {
-    case "1":
-      let _;
-      fetchContactsData().then((res) => {
-        _ = [...res.slice(0, PAGESIZE)].filter((e) => {
-          if (e.age >= 1 && e.age <= 15) {
-            return e;
-          }
-        });
-        setpaginatedrecords(_);
-      });
-
-      break;
-    case "2":
-      fetchContactsData().then((res) => {
-        _ = [...res.slice(0, PAGESIZE)].filter((e) => {
-          if (e.age >= 16 && e.age <= 30) {
-            return e;
-          }
-        });
-        setpaginatedrecords(_);
-      });
-
-      break;
-    case "3":
-      fetchContactsData().then((res) => {
-        _ = [...res.slice(0, PAGESIZE)].filter((e) => {
-          if (e.age >= 31 && e.age <= 60) {
-            return e;
-          }
-        });
-        setpaginatedrecords(_);
-      });
-
-      break;
-    case "4":
-      fetchContactsData().then((res) => {
-        _ = [...res.slice(0, PAGESIZE)].filter((e) => {
-          if (e.age > 60) {
-            return e;
-          }
-        });
-        setpaginatedrecords(_);
-      });
-      break;
-    default:
-      fetchContactsData().then((res) => {
-        setRecords(res);
-        setpaginatedrecords(res.slice(0, PAGESIZE));
-      });
-
-      break;
-  }
-}, [ageGroup]);
 
   useEffect(() => {
     checkAuth();
@@ -397,7 +155,7 @@ useEffect(() => {
   const handleSortAscend = (key) => {
     //sort on basis of key
     let _;
-    if (key === "id") {
+    if (key === "cuil") {
       _ = [...paginatedrecords].sort((a, b) => a[key] - b[key]);
     } else if (key === "timestamp") {
       _ = [...paginatedrecords].sort(
@@ -412,7 +170,7 @@ useEffect(() => {
   };
   const handleSortDescend = (key) => {
     let _;
-    if (key === "id") {
+    if (key === "cuil") {
       _ = [...paginatedrecords].sort((a, b) => b[key] - a[key]);
     } else if (key === "timestamp") {
       _ = [...paginatedrecords].sort(
@@ -447,21 +205,6 @@ useEffect(() => {
         </div>
       </nav>
       
-      {loader && (
-        <div className="_loader">
-          <InfinitySpin width="200" color="#4fa94d" />
-        </div>
-      )}
-      {!loader && (
-        <div className="container__chart" >
-          <UserRegisteredBar registerPerDay={registerPerDay} />
-          <SubmitApexChart registerPerDay={registerPerDay} />
-
-
-        
-        </div>
-      )}
-      <br />
       <div style={{
         display:'flex', 
         justifyContent:'center'
@@ -478,16 +221,7 @@ useEffect(() => {
               <button onClick={filterData}>filter</button>
             </span>
           </div>
-          <div>
-            <span>Ordenar por edad</span>{" "}
-            <select onChange={(e) => setAgeGroup(e.target.value)}>
-              <option value="all">All</option>
-              <option value="1">1-15</option>
-              <option value="2">16-30</option>
-              <option value="3">31-60</option>
-              <option value="4">Mayor de 60</option>
-            </select>
-          </div>
+
           <div>
             <button disabled={records.length===0} onClick={toExport}>Exportar CSV</button>
           </div>
@@ -525,11 +259,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("name")}
+                      onClick={() => handleSortAscend("nombre")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("name")}
+                      onClick={() => handleSortDescend("nombre")}
                       style={iconStyle}
                     />
                   </div>
@@ -540,11 +274,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("phoneNumber")}
+                      onClick={() => handleSortAscend("telefono")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("phoneNumber")}
+                      onClick={() => handleSortDescend("telefono")}
                       style={iconStyle}
                     />
                   </div>
@@ -555,11 +289,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("id")}
+                      onClick={() => handleSortAscend("cuil")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("id")}
+                      onClick={() => handleSortDescend("cuil")}
                       style={iconStyle}
                     />
                   </div>
@@ -570,11 +304,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("age")}
+                      onClick={() => handleSortAscend("ingresoMensual")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("age")}
+                      onClick={() => handleSortDescend("ingresoMensual")}
                       style={iconStyle}
                     />
                   </div>
@@ -585,11 +319,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("gender")}
+                      onClick={() => handleSortAscend("mail")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("gender")}
+                      onClick={() => handleSortDescend("mail")}
                       style={iconStyle}
                     />
                   </div>
@@ -601,11 +335,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("personalNote")}
+                      onClick={() => handleSortAscend("estadoCivil")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("personalNote")}
+                      onClick={() => handleSortDescend("estadoCivil")}
                       style={iconStyle}
                     />
                   </div>
@@ -617,11 +351,11 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("selectedEmoji")}
+                      onClick={() => handleSortAscend("hijos")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("selectedEmoji")}
+                      onClick={() => handleSortDescend("hijos")}
                       style={iconStyle}
                     />
                   </div>
@@ -637,16 +371,21 @@ useEffect(() => {
               <tr key={index} style={{ borderBottom: "1px solid black" }}>
                 <td style={{ padding: "10px" }}>{index + 1}</td>
                 <td style={{ padding: "10px" }}>{getTime(e.timestamp)}</td>
-                <td style={{ padding: "10px" }}>{e.name}</td>
-                <td style={{ padding: "10px" }}>{e.phoneNumber}</td>
-                <td style={{ padding: "10px" }}>{e.id}</td>
-                <td style={{ padding: "10px" }}>{e.age}</td>
-                <td style={{ padding: "10px" }}>{e.gender}</td>
-                <td style={{ padding: "10px" }}>{e.assistanceType}</td>
-                <td style={{ padding: "10px" }}>{e.personalNote}</td>
-                <td style={{ padding: "10px" }}>{e.generalNote}</td>
-                <td style={{ padding: "10px" }}>{e.selectedEmoji}</td>
-                <td style={{ padding: "10px" }}>{e.emojiText}</td>
+                <td style={{ padding: "10px" }}>{e.nombre}</td>
+                <td style={{ padding: "10px" }}>{e.apellido}</td>
+                <td style={{ padding: "10px" }}>{e.cuil}</td>
+                <td style={{ padding: "10px" }}>{e.telefono}</td>
+                <td style={{ padding: "10px" }}>{e.mail}</td>
+                <td style={{ padding: "10px" }}>{e.ingresoMensual}</td>
+                <td style={{ padding: "10px" }}>{e.antiguedad}</td>
+                <td style={{ padding: "10px" }}>{e.estadoCivil}</td>
+                <td style={{ padding: "10px" }}>{e.ocupacion}</td>
+                <td style={{ padding: "10px" }}>{e.hijos}</td>
+                <td style={{ padding: "10px" }}>{e.fechaNacimiento}</td>
+                <td style={{ padding: "10px" }}>{e.fechaSolicitud}</td>
+                <td style={{ padding: "10px" }}>{e.dniFrente}</td>
+                <td style={{ padding: "10px" }}>{e.dniDorso}</td>
+                <td style={{ padding: "10px" }}>{e.retratoDni}</td>
                 <td style={{ padding: "10px" }}>
                   <a
                     onClick={() => {
@@ -712,9 +451,9 @@ useEffect(() => {
         overflow: "auto",
       }}
     >
-      <h1>{selected.name}</h1>
-      <p>Teléfono: {selected.phoneNumber}</p>
-      <p>Documento: {selected.id}</p>
+      <h1>{selected.nombre}</h1>
+      <p>Teléfono: {selected.telefono}</p>
+      <p>Documento: {selected.cuil}</p>
       <br/>
       <button onClick={() => setShow(false)}>Cerrar</button>
     </div>
