@@ -1,5 +1,5 @@
 import "../css/Verification.css";
-import useNavigate from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
@@ -8,11 +8,8 @@ import Banner from "../components/Header";
 import Footer from '../components/Footer';
 
 function Verification() {
-  const [user, loading] = useAuthState(auth);
-  const [name, setName] = useState("");
-  const [mail, setMail] = useState("");
+  const user = useAuthState(auth);
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(false);
   const [cuit, setCuit] = useState("");
   const [cuitError, setCuitError] = useState("");
 
@@ -55,25 +52,13 @@ function Verification() {
 
     fetchUserName()
       .then((userData) => {
-        setName(userData[0].name);
-        setMail(userData[0].email);
-          setCuit(userData[0].cuit);
-        console.log(userData[0].name, userData[0].email);
+        setCuit(userData[0].cuit);
+        console.log(userData[0].cuit);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [user]);
-
-  useEffect(() => {
-    if (cuit) {
-      checkCuitAvailability();
-
-      if (cuitError) {
-        setChecked(false);
-      }
-    }
-  }, [cuit]);
 
   return (
   <div>
@@ -85,17 +70,17 @@ function Verification() {
           <h2>
             Antes de comenzar por favor ingresa tu CUIT
           </h2>
-          <br/>
+        </div>
+        <div className="row">
           <input
+          className="verification__input"
           type="text"
           placeholder="CUIT"
           onChange={(e) => setCuit(e.target.value)}
           />
           {cuitError && <span className="error">{cuitError}</span>}
-        </div>
-        <div className="row">
           <button
-            className={checked ? "btn" : "btn disabled"}
+            className="btn"
             onClick={() => {
               if (cuit) {
                 checkCuitAvailability();
