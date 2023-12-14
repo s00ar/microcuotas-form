@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, fetchContactsData, logout } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { query, collection, getDocs, where, addDoc } from "firebase/firestore";
+import { query, collection, getDocs, where } from "firebase/firestore";
 import { QuerySnapshot } from "firebase/firestore";
 import '../css/Report.css';
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
@@ -31,7 +31,6 @@ export default function Admin() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [page, setPage] = useState(0);
-  const [hijos, setHijos] = useState(false);
 
   const PAGESIZE =10
 
@@ -45,22 +44,17 @@ export default function Admin() {
 
   const checkAuth = async () => {
     if (!user) return navigate("/login");
-    if (user.role === "user") return navigate("/dashboard");
-    if (user.role === "report") return navigate("/report");
+    if (user) return navigate("/report");
 
     const uid = user && user.uid;
     const q = query(collection(db, "users"), where("uid", "==", uid));
     const doc = await getDocs(q);
-     const data = [];
-     doc.forEach((doc) => {
-       data.push(doc.data());
-     });
-    if (!data.role === "admin" || !data.role === "report") return navigate("/login");
+    const data = [];
+    doc.forEach((doc) => {
+      data.push(doc.data());
+    });
     let rows = await fetchContactsData()
     setRecords(rows);
-    filterRegisteredUsers(rows);
-    filterGender(rows)
-    groupAge(rows)
     setpaginatedrecords(rows.slice(0,PAGESIZE))
   };
 
@@ -155,7 +149,7 @@ useEffect(() => {
   const handleSortAscend = (key) => {
     //sort on basis of key
     let _;
-    if (key === "cuil") {
+    if (key === "id") {
       _ = [...paginatedrecords].sort((a, b) => a[key] - b[key]);
     } else if (key === "timestamp") {
       _ = [...paginatedrecords].sort(
@@ -170,7 +164,7 @@ useEffect(() => {
   };
   const handleSortDescend = (key) => {
     let _;
-    if (key === "cuil") {
+    if (key === "id") {
       _ = [...paginatedrecords].sort((a, b) => b[key] - a[key]);
     } else if (key === "timestamp") {
       _ = [...paginatedrecords].sort(
@@ -274,15 +268,15 @@ useEffect(() => {
                 <div style={headerStyle}>
                   <div>
                     <TiArrowSortedUp
-                      onClick={() => handleSortAscend("telefono")}
+                      onClick={() => handleSortAscend("Apellido")}
                       style={iconStyle}
                     />
                     <TiArrowSortedDown
-                      onClick={() => handleSortDescend("telefono")}
+                      onClick={() => handleSortDescend("Apellido")}
                       style={iconStyle}
                     />
                   </div>
-                  Teléfono
+                  Apellido
                 </div>
               </th>
               <th>
@@ -297,7 +291,23 @@ useEffect(() => {
                       style={iconStyle}
                     />
                   </div>
-                  Documento
+                  CUIL
+                </div>
+              </th>
+              <th style={{ padding: "10px" }}>Teléfono</th>
+              <th>
+                <div style={headerStyle}>
+                  <div>
+                    <TiArrowSortedUp
+                      onClick={() => handleSortAscend("mail")}
+                      style={iconStyle}
+                    />
+                    <TiArrowSortedDown
+                      onClick={() => handleSortDescend("mail")}
+                      style={iconStyle}
+                    />
+                  </div>
+                  Email
                 </div>
               </th>
               <th>
@@ -312,25 +322,10 @@ useEffect(() => {
                       style={iconStyle}
                     />
                   </div>
-                  Edad
+                  Ingreso Mensual
                 </div>
               </th>
-              <th>
-                <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("mail")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("mail")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  Género
-                </div>
-              </th>
-              <th style={{ padding: "10px" }}>Asistencia</th>
+              <th style={{ padding: "10px" }}>Antiguedad</th>
               <th>
                 <div style={headerStyle}>
                   <div>
@@ -343,27 +338,13 @@ useEffect(() => {
                       style={iconStyle}
                     />
                   </div>
-                  Tipo de nota personal
+                  Estado Civil
                 </div>
               </th>
-              <th style={{ padding: "10px" }}>Nota personal</th>
-              <th style={{ padding: "10px" }}>
-                <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("hijos")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("hijos")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  Valoración
-                </div>
-              </th>
-              <th style={{ padding: "10px" }}>Emoji</th>
-              <th style={{ padding: "10px" }}>Acción</th>
+              <th style={{ padding: "10px" }}>Ocupación</th>
+              <th style={{ padding: "10px" }}>Hijos</th>
+              <th style={{ padding: "10px" }}>Fecha de Nacimiento</th>
+              <th style={{ padding: "10px" }}>Fecha de Solicitud</th>
             </tr>
           </thead>
           <tbody>
@@ -394,7 +375,7 @@ useEffect(() => {
                     }}
                     style={{ cursor: "pointer" }}
                   >
-                    Ver detalles
+                    Ver documentación
                   </a>
                 </td>
               </tr>
@@ -453,8 +434,14 @@ useEffect(() => {
     >
       <h1>{selected.nombre}</h1>
       <p>Teléfono: {selected.telefono}</p>
-      <p>Documento: {selected.cuil}</p>
-      <br/>
+      <p>CUIL: {selected.cuil}</p>
+      <a href={`mailto:${selected.correo}`}>Correo electrónico</a><br/>
+      <p>DNI Frente</p>
+      <img src={`data:image/png;base64, ${selected.dniFrente}`} alt="DNI"/>
+      <p>DNI Dorso</p>
+      <img src={`data:image/png;base64, ${selected.dniDorso}`} alt="DNI"/>
+      <p>Retrato con DNI</p>
+      <img src={`data:image/jpeg;base64, ${selected.retratoDni}`} alt="Retrato+DNI"/>
       <button onClick={() => setShow(false)}>Cerrar</button>
     </div>
   </div>
