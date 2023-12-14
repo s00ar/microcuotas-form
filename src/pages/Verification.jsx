@@ -1,5 +1,5 @@
 import "../css/Verification.css";
-import { Link, useNavigate } from "react-router-dom";
+import useNavigate from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
@@ -12,19 +12,9 @@ function Verification() {
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const navigate = useNavigate();
-  const [showFooter, setShowFooter] = useState(true);
-  const [showFullText, setShowFullText] = useState(false);
   const [checked, setChecked] = useState(false);
   const [cuit, setCuit] = useState("");
   const [cuitError, setCuitError] = useState("");
-
-  const handleVerMasClick = () => {
-    setShowFullText(!showFullText);
-  };
-
-  const handleCheckboxClick = () => {
-    setChecked(!checked);
-  };
 
   const fetchUserName = async () => {
     //   const uid = user && user.uid;
@@ -46,7 +36,7 @@ function Verification() {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.size > 0) {
-      setCuitError("El CUIT ya está registrado. Solo se puede ingresar una solicitud cada 30 días");
+      setCuitError("CUIT already registered within the last 30 days. You can only submit one form each 30 days.");
       return;
     } else {
       setCuitError("");
@@ -84,12 +74,6 @@ function Verification() {
       }
     }
   }, [cuit]);
-
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (!user) return navigate("/login");
-  //   fetchUserName();
-  // }, [user, loading]);
 
   return (
   <div>
