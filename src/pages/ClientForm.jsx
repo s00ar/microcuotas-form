@@ -3,6 +3,8 @@ import { storage, db } from '../firebase';
 import '../css/ClientForm.css';
 import Banner from "../components/Header";
 import Footer from '../components/Footer';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, addDoc } from 'firebase/firestore';
 
 const ClientForm = () => {
   const [nombre, setNombre] = useState('');
@@ -82,34 +84,92 @@ const ClientForm = () => {
     setRetratoDni(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Subir imágenes a Firebase Storage
-    const uploadDniFrenteTask = storage.ref(`documentos/${dniFrente.name}`).put(dniFrente);
-    // Continúa con las demás tareas de subida de imágenes
-
-    // Luego de completar la subida de todas las imágenes, guardar datos en Firebase Database
-    // Utiliza los datos capturados en los estados para enviarlos a la base de datos
-
-    db.ref('clientes').push({
-      nombre,
-      apellido,
-      cuil,
-      telefono,
-      mail,
-      estadoCivil,
-      hijos,
-      ocupacion,
-      ingresoMensual,
-      antiguedad,
-      fechaNacimiento,
-      fechaSolicitud,
-      dniFrente,
-      dniDorso,
-      retratoDni
-    });
+  
+    // Check if any of the required fields is empty
+    if (
+      !nombre ||
+      !apellido ||
+      !cuil ||
+      !telefono ||
+      !mail ||
+      !estadoCivil ||
+      !hijos ||
+      !ocupacion ||
+      !ingresoMensual ||
+      !antiguedad ||
+      !fechaNacimiento ||
+      !fechaSolicitud ||
+      !dniFrente ||
+      !dniDorso ||
+      !retratoDni
+    ) {
+      alert('Please fill all the fields');
+      return;
+    }
+  
+    try {
+      // Upload images to Firebase Storage
+      const dniFrenteRef = ref(storage, `documentos/${dniFrente.name}`);
+      const dniDorsoRef = ref(storage, `documentos/${dniDorso.name}`);
+      const retratoDniRef = ref(storage, `documentos/${retratoDni.name}`);
+  
+      const uploadDniFrenteTask = uploadBytes(dniFrenteRef, dniFrente);
+      const uploadDniDorsoTask = uploadBytes(dniDorsoRef, dniDorso);
+      const uploadRetratoDniTask = uploadBytes(retratoDniRef, retratoDni);
+  
+      // Wait for all uploads to complete
+      await Promise.all([uploadDniFrenteTask, uploadDniDorsoTask, uploadRetratoDniTask]);
+  
+      // Get download URLs for the images
+      const dniFrenteURL = await getDownloadURL(dniFrenteRef);
+      const dniDorsoURL = await getDownloadURL(dniDorsoRef);
+      const retratoDniURL = await getDownloadURL(retratoDniRef);
+  
+      // Save data to Firebase Firestore
+      const clientesCollection = collection(db, 'clientes');
+      await addDoc(clientesCollection, {
+        nombre,
+        apellido,
+        cuil,
+        telefono,
+        mail,
+        estadoCivil,
+        hijos,
+        ocupacion,
+        ingresoMensual,
+        antiguedad,
+        fechaNacimiento,
+        fechaSolicitud,
+        dniFrente: dniFrenteURL,
+        dniDorso: dniDorsoURL,
+        retratoDni: retratoDniURL,
+      });
+  
+      // Clear all fields after successful submission
+      setNombre('');
+      setApellido('');
+      setCuil('');
+      setTelefono('');
+      setMail('');
+      setEstadoCivil('');
+      setHijos('');
+      setOcupacion('');
+      setIngresoMensual('');
+      setAntiguedad('');
+      setFechaNacimiento('');
+      setDniFrente(null);
+      setDniDorso(null);
+      setRetratoDni(null);
+  
+      alert('Data submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      alert('An error occurred while submitting data');
+    }
   };
+  
 
   return (
     <div>
