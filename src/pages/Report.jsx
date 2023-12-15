@@ -45,16 +45,15 @@ export default function Admin() {
   const [dniDorso, setDniDorso] = useState(null);
   const [retratoDni, setRetratoDni] = useState(null);
   const PAGESIZE = 10
-  // const [user, loading] = useAuthState(auth);
 
+  
   if (!loading && user) {
-    console.log(user.uid);
-
-    const fetchDataFromFirestore = async (uid) => {
+    const fetchDataFromFirestore = async (email) => {
       try {
         const clientesCollection = collection(db, 'clientes');
+
         const querySnapshot = await getDocs(
-          query(clientesCollection, where('cuil', '==', uid))
+          query(clientesCollection, where('mail', '==', email))
         );
 
         const data = [];
@@ -98,7 +97,7 @@ export default function Admin() {
         console.error('Error fetching data from Firestore:', error);
       }
     };
-    fetchDataFromFirestore(user.uid);
+    fetchDataFromFirestore(user.email);
   }
 
   useEffect(() => {
