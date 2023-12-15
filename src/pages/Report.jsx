@@ -3,7 +3,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, fetchContactsData, logout } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { query, collection, getDocs, where } from "firebase/firestore";
-import { QuerySnapshot } from "firebase/firestore";
 import '../css/Report.css';
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import Logo from '../assets/logo_textoblanco_fondotransp.png';
@@ -23,6 +22,7 @@ const headerStyle = {
 
 export default function Admin() {
   const [user, loading] = useAuthState(auth);
+
   const navigate = useNavigate();
   const [records, setRecords] = useState([]);
   const [paginatedrecords, setpaginatedrecords] = useState([]);
@@ -31,14 +31,81 @@ export default function Admin() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [page, setPage] = useState(0);
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [cuil, setCuil] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [mail, setMail] = useState('');
+  const [estadoCivil, setEstadoCivil] = useState('');
+  const [hijos, setHijos] = useState('');
+  const [ocupacion, setOcupacion] = useState('');
+  const [ingresoMensual, setIngresoMensual] = useState('');
+  const [antiguedad, setAntiguedad] = useState('');
+  const [dniFrente, setDniFrente] = useState(null);
+  const [dniDorso, setDniDorso] = useState(null);
+  const [retratoDni, setRetratoDni] = useState(null);
+  const PAGESIZE = 10
+  // const [user, loading] = useAuthState(auth);
 
-  const PAGESIZE =10
+  if (!loading && user) {
+    console.log(user.uid);
 
-  useEffect(()=>{
+    const fetchDataFromFirestore = async (uid) => {
+      try {
+        const clientesCollection = collection(db, 'clientes');
+        const querySnapshot = await getDocs(
+          query(clientesCollection, where('cuil', '==', uid))
+        );
+
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          const {
+            nombre,
+            apellido,
+            cuil,
+            telefono,
+            mail,
+            estadoCivil,
+            hijos,
+            ocupacion,
+            ingresoMensual,
+            antiguedad,
+            fechaNacimiento,
+            fechaSolicitud,
+            dniFrente,
+            dniDorso,
+            retratoDni,
+          } = doc.data();
+
+          setStartDate(fechaSolicitud)
+          setEndDate(fechaNacimiento)
+          setNombre(nombre)
+          setCuil(cuil)
+          setApellido(apellido)
+          setTelefono(telefono)
+          setMail(mail)
+          setEstadoCivil(estadoCivil)
+          setHijos(hijos)
+          setOcupacion(ocupacion)
+          setIngresoMensual(ingresoMensual)
+          setAntiguedad(antiguedad)
+          setDniDorso(dniDorso)
+          setDniFrente(dniFrente)
+          setRetratoDni(retratoDni)
+
+        });
+      } catch (error) {
+        console.error('Error fetching data from Firestore:', error);
+      }
+    };
+    fetchDataFromFirestore(user.uid);
+  }
+
+  useEffect(() => {
     console.log(page)
     const min = page * PAGESIZE
     const max = (page * PAGESIZE) + PAGESIZE
-    let _ =records.slice( min, max)
+    let _ = records.slice(min, max)
     setpaginatedrecords(_)
   }, [page])
 
@@ -55,24 +122,24 @@ export default function Admin() {
     });
     let rows = await fetchContactsData()
     setRecords(rows);
-    setpaginatedrecords(rows.slice(0,PAGESIZE))
+    setpaginatedrecords(rows.slice(0, PAGESIZE))
   };
 
   const getTime = (fechaSolicitud) => {
     const fireBaseTime = new Date(
       fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000,
     );
-    const date = fireBaseTime.toDateString()+" " +fireBaseTime.toLocaleTimeString()
+    const date = fireBaseTime.toDateString() + " " + fireBaseTime.toLocaleTimeString()
     return date;
   }
-  
-const getDay = (fechaSolicitud) => {
-  const fireBaseTime = new Date(
-    fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000
-  );
-  const date = fireBaseTime.toDateString();
-  return date;
-};
+
+  const getDay = (fechaSolicitud) => {
+    const fireBaseTime = new Date(
+      fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000
+    );
+    const date = fireBaseTime.toDateString();
+    return date;
+  };
 
   const toExport = () => {
     let header = [
@@ -93,14 +160,14 @@ const getDay = (fechaSolicitud) => {
       "retratoDni",
       "\n"
     ]
-    let csvRows = records.map(e=>{
+    let csvRows = records.map(e => {
       let _ = []
       _[0] = e.nombre
       _[1] = e.apellido
       _[2] = e.cuil
       _[3] = e.telefono
       _[4] = e.mail
-      _[5] = `"${e.estadoCivil}"` 
+      _[5] = `"${e.estadoCivil}"`
       _[6] = e.hijos ? e.hijos : ""
       _[7] = `"${e.ocupacion}"`
       _[8] = e.ingresoMensual
@@ -110,19 +177,19 @@ const getDay = (fechaSolicitud) => {
       _[12] = e.dniFrente
       _[13] = e.dniDorso
       _[14] = e.retratoDni
-      _[15]="\n"
+      _[15] = "\n"
       return _
-  })  
-      var pom = document.createElement('a');
-      var blob = new Blob([header, ...csvRows],{type: 'text/csv;charset=utf-8;'});
-      var url = URL.createObjectURL(blob);
-      pom.href = url;
-      pom.setAttribute('download', 'download.csv');
-      pom.click();
-      alert("Archivo exportado correctamente")
+    })
+    var pom = document.createElement('a');
+    var blob = new Blob([header, ...csvRows], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    pom.href = url;
+    pom.setAttribute('download', 'download.csv');
+    pom.click();
+    alert("Archivo exportado correctamente")
   }
 
-useEffect(() => {
+  useEffect(() => {
     const min = page * PAGESIZE;
     const max = page * PAGESIZE + PAGESIZE;
     let _ = records.slice(min, max);
@@ -140,7 +207,7 @@ useEffect(() => {
   //   // enter()
   // }, [user, loading]);
 
-  const filterData = async() => {
+  const filterData = async () => {
     let rows = await fetchContactsData(startDate, endDate)
     setRecords(rows);
     setpaginatedrecords(rows)
@@ -185,54 +252,54 @@ useEffect(() => {
             <h2 className="admin__title">Herramienta de Reportes</h2>
           </div>
           <div className="admin__button__container">
-              <button className="btn__admin">
+            <button className="btn__admin">
               <Link className="btn__admin__text" to="/login">
-                  Volver a login
+                Volver a login
               </Link>
             </button>
             <button className="btn__admin">
               <a className="btn__admin__text" onClick={logout} href="/login">
-                  Salir
+                Salir
               </a>
             </button>
           </div>
         </div>
       </nav>
-      
+
       <div style={{
-        display:'flex', 
-        justifyContent:'center'
-        }}>
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
         <div style={{
-          width:"80%", 
-        display:"flex", 
-        justifyContent:"space-between"
+          width: "80%",
+          display: "flex",
+          justifyContent: "space-between"
         }} >
           <div>
             <span>
-              Fecha inicial: <input type={"date"} value={startDate} onChange={e=>setStartDate(e.target.value)} /> 
-              Fecha Final: <input type={"date"} value={endDate} onChange={e=>setEndDate(e.target.value)} />
+              Fecha inicial: <input type={"date"} value={startDate} onChange={e => setStartDate(e.target.value)} />
+              Fecha Final: <input type={"date"} value={endDate} onChange={e => setEndDate(e.target.value)} />
               <button onClick={filterData}>filter</button>
             </span>
           </div>
 
           <div>
-            <button disabled={records.length===0} onClick={toExport}>Exportar CSV</button>
+            <button disabled={records.length === 0} onClick={toExport}>Exportar CSV</button>
           </div>
         </div>
       </div>
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "center" 
+      <div style={{
+        display: "flex",
+        justifyContent: "center"
       }}>
         <table style={{
           borderCollapse: "collapse",
           width: "80%"
-          }}>
+        }}>
           <thead>
             <tr style={{
               borderBottom: "1px solid black"
-              }}>
+            }}>
               <th style={{ padding: "10px" }}>Id</th>
               <th>
                 <div style={headerStyle}>
@@ -348,62 +415,59 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
-            {paginatedrecords.map((e, index) => (
-              <tr key={index} style={{ borderBottom: "1px solid black" }}>
-                <td style={{ padding: "10px" }}>{index + 1}</td>
-                <td style={{ padding: "10px" }}>{getTime(e.timestamp)}</td>
-                <td style={{ padding: "10px" }}>{e.nombre}</td>
-                <td style={{ padding: "10px" }}>{e.apellido}</td>
-                <td style={{ padding: "10px" }}>{e.cuil}</td>
-                <td style={{ padding: "10px" }}>{e.telefono}</td>
-                <td style={{ padding: "10px" }}>{e.mail}</td>
-                <td style={{ padding: "10px" }}>{e.ingresoMensual}</td>
-                <td style={{ padding: "10px" }}>{e.antiguedad}</td>
-                <td style={{ padding: "10px" }}>{e.estadoCivil}</td>
-                <td style={{ padding: "10px" }}>{e.ocupacion}</td>
-                <td style={{ padding: "10px" }}>{e.hijos}</td>
-                <td style={{ padding: "10px" }}>{e.fechaNacimiento}</td>
-                <td style={{ padding: "10px" }}>{e.fechaSolicitud}</td>
-                <td style={{ padding: "10px" }}>{e.dniFrente}</td>
-                <td style={{ padding: "10px" }}>{e.dniDorso}</td>
-                <td style={{ padding: "10px" }}>{e.retratoDni}</td>
-                <td style={{ padding: "10px" }}>
-                  <a
-                    onClick={() => {
-                      setShow(true);
-                      setSelected(e);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Ver documentación
-                  </a>
-                </td>
-              </tr>
-            ))}
+            <tr style={{ borderBottom: "1px solid black" }}>
+              <td style={{ padding: "10px" }}>{nombre}</td>
+              <td style={{ padding: "10px" }}>{apellido}</td>
+              <td style={{ padding: "10px" }}>{cuil}</td>
+              <td style={{ padding: "10px" }}>{telefono}</td>
+              <td style={{ padding: "10px" }}>{mail}</td>
+              <td style={{ padding: "10px" }}>{ingresoMensual}</td>
+              <td style={{ padding: "10px" }}>{antiguedad}</td>
+              <td style={{ padding: "10px" }}>{estadoCivil}</td>
+              <td style={{ padding: "10px" }}>{ocupacion}</td>
+              <td style={{ padding: "10px" }}>{hijos}</td>
+              <td style={{ padding: "10px" }}>{endDate}</td>
+              <td style={{ padding: "10px" }}>{startDate}</td>
+              <td style={{ padding: "10px" }}>{dniFrente}</td>
+              <td style={{ padding: "10px" }}>{dniDorso}</td>
+              <td style={{ padding: "10px" }}>{retratoDni}</td>
+              <td style={{ padding: "10px" }}>
+                <a
+                  onClick={() => {
+                    setShow(true);
+                    // setSelected(e);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  Ver documentación
+                </a>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
       <br />
       <div style={{
-        display:'flex', 
-        justifyContent:'center'
-        }}>
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
         <div style={{
-          width:"80%", 
-          display:"flex", 
-          justifyContent:"end"}} >
+          width: "80%",
+          display: "flex",
+          justifyContent: "end"
+        }} >
           <div>
-            <button 
-            disabled={page<=0}
-            onClick={()=>{
-              setPage(page-1 <= 0 ? 0 :page-1)
-            }}>
+            <button
+              disabled={page <= 0}
+              onClick={() => {
+                setPage(page - 1 <= 0 ? 0 : page - 1)
+              }}>
               Ant
             </button>
             <button disabled={
-              (page+1)*PAGESIZE >= records.length
-            } onClick={()=>{
-              setPage(page+1)
+              (page + 1) * PAGESIZE >= records.length
+            } onClick={() => {
+              setPage(page + 1)
             }}>Prev</button>
           </div>
         </div>
@@ -423,29 +487,29 @@ useEffect(() => {
           }}
         >
           <div
-      style={{
-        backgroundColor: "white",
-        padding: "20px",
-        borderRadius: "10px",
-        maxWidth: "80%",
-        maxHeight: "80%",
-        overflow: "auto",
-      }}
-    >
-      <h1>{selected.nombre}</h1>
-      <p>Teléfono: {selected.telefono}</p>
-      <p>CUIL: {selected.cuil}</p>
-      <a href={`mailto:${selected.correo}`}>Correo electrónico</a><br/>
-      <p>DNI Frente</p>
-      <img src={`data:image/png;base64, ${selected.dniFrente}`} alt="DNI"/>
-      <p>DNI Dorso</p>
-      <img src={`data:image/png;base64, ${selected.dniDorso}`} alt="DNI"/>
-      <p>Retrato con DNI</p>
-      <img src={`data:image/jpeg;base64, ${selected.retratoDni}`} alt="Retrato+DNI"/>
-      <button onClick={() => setShow(false)}>Cerrar</button>
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              maxWidth: "80%",
+              maxHeight: "80%",
+              overflow: "auto",
+            }}
+          >
+            <h1>{selected.nombre}</h1>
+            <p>Teléfono: {selected.telefono}</p>
+            <p>CUIL: {selected.cuil}</p>
+            <a href={`mailto:${selected.correo}`}>Correo electrónico</a><br />
+            <p>DNI Frente</p>
+            <img src={`data:image/png;base64, ${selected.dniFrente}`} alt="DNI" />
+            <p>DNI Dorso</p>
+            <img src={`data:image/png;base64, ${selected.dniDorso}`} alt="DNI" />
+            <p>Retrato con DNI</p>
+            <img src={`data:image/jpeg;base64, ${selected.retratoDni}`} alt="Retrato+DNI" />
+            <button onClick={() => setShow(false)}>Cerrar</button>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-  )}
-</div>
-);
+  );
 }
