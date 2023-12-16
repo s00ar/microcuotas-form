@@ -24,87 +24,38 @@ export default function Admin() {
   const [user, loading] = useAuthState(auth);
 
   const navigate = useNavigate();
-  const [records, setRecords] = useState([]);
+  const [clientesData, setClientesData] = useState([]);
   const [paginatedrecords, setpaginatedrecords] = useState([]);
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [page, setPage] = useState(0);
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [cuil, setCuil] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [mail, setMail] = useState('');
-  const [estadoCivil, setEstadoCivil] = useState('');
-  const [hijos, setHijos] = useState('');
-  const [ocupacion, setOcupacion] = useState('');
-  const [ingresoMensual, setIngresoMensual] = useState('');
-  const [antiguedad, setAntiguedad] = useState('');
-  const [dniFrente, setDniFrente] = useState(null);
-  const [dniDorso, setDniDorso] = useState(null);
-  const [retratoDni, setRetratoDni] = useState(null);
   const PAGESIZE = 10
 
-  
+
   if (!loading && user) {
-    const fetchDataFromFirestore = async (email) => {
+    const fetchDataFromFirestore = async () => {
       try {
         const clientesCollection = collection(db, 'clientes');
-
-        const querySnapshot = await getDocs(
-          query(clientesCollection, where('mail', '==', email))
-        );
-
+        const querySnapshot = await getDocs(clientesCollection);
         const data = [];
         querySnapshot.forEach((doc) => {
-          const {
-            nombre,
-            apellido,
-            cuil,
-            telefono,
-            mail,
-            estadoCivil,
-            hijos,
-            ocupacion,
-            ingresoMensual,
-            antiguedad,
-            fechaNacimiento,
-            fechaSolicitud,
-            dniFrente,
-            dniDorso,
-            retratoDni,
-          } = doc.data();
-
-          setStartDate(fechaSolicitud)
-          setEndDate(fechaNacimiento)
-          setNombre(nombre)
-          setCuil(cuil)
-          setApellido(apellido)
-          setTelefono(telefono)
-          setMail(mail)
-          setEstadoCivil(estadoCivil)
-          setHijos(hijos)
-          setOcupacion(ocupacion)
-          setIngresoMensual(ingresoMensual)
-          setAntiguedad(antiguedad)
-          setDniDorso(dniDorso)
-          setDniFrente(dniFrente)
-          setRetratoDni(retratoDni)
-
+          data.push(doc.data());
         });
+        setClientesData(data); // Set the state with the entire 'clientes' collection data
       } catch (error) {
         console.error('Error fetching data from Firestore:', error);
       }
     };
-    fetchDataFromFirestore(user.email);
+    fetchDataFromFirestore();
   }
 
   useEffect(() => {
     console.log(page)
     const min = page * PAGESIZE
     const max = (page * PAGESIZE) + PAGESIZE
-    let _ = records.slice(min, max)
+    let _ = clientesData.slice(min, max)
     setpaginatedrecords(_)
   }, [page])
 
@@ -120,17 +71,15 @@ export default function Admin() {
       data.push(doc.data());
     });
     let rows = await fetchContactsData()
-    setRecords(rows);
+    setClientesData(rows);
     setpaginatedrecords(rows.slice(0, PAGESIZE))
   };
 
   const getTime = (fechaSolicitud) => {
-    const fireBaseTime = new Date(
-      fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000,
-    );
-    const date = fireBaseTime.toDateString() + " " + fireBaseTime.toLocaleTimeString()
-    return date;
-  }
+    const fireBaseTime = new Date(fechaSolicitud.seconds * 1000 + fechaSolicitud.nanoseconds / 1000000);
+    return fireBaseTime;
+  };
+  
 
   const getDay = (fechaSolicitud) => {
     const fireBaseTime = new Date(
@@ -159,7 +108,7 @@ export default function Admin() {
       "retratoDni",
       "\n"
     ]
-    let csvRows = records.map(e => {
+    let csvRows = clientesData.map(e => {
       let _ = []
       _[0] = e.nombre
       _[1] = e.apellido
@@ -191,7 +140,7 @@ export default function Admin() {
   useEffect(() => {
     const min = page * PAGESIZE;
     const max = page * PAGESIZE + PAGESIZE;
-    let _ = records.slice(min, max);
+    let _ = clientesData.slice(min, max);
     setpaginatedrecords(_);
   }, [page]);
 
@@ -207,10 +156,14 @@ export default function Admin() {
   // }, [user, loading]);
 
   const filterData = async () => {
-    let rows = await fetchContactsData(startDate, endDate)
-    setRecords(rows);
-    setpaginatedrecords(rows)
-  }
+    try {
+      const rows = await fetchContactsData(startDate, endDate);
+      setClientesData(rows);
+      setpaginatedrecords(rows);
+    } catch (error) {
+      console.error('Error filtering data:', error);
+    }
+  };
 
   const handleSortAscend = (key) => {
     //sort on basis of key
@@ -283,7 +236,7 @@ export default function Admin() {
           </div>
 
           <div>
-            <button disabled={records.length === 0} onClick={toExport}>Exportar CSV</button>
+            <button disabled={clientesData.length === 0} onClick={toExport}>Exportar CSV</button>
           </div>
         </div>
       </div>
@@ -414,34 +367,37 @@ export default function Admin() {
             </tr>
           </thead>
           <tbody>
-            <tr style={{ borderBottom: "1px solid black" }}>
-              <td style={{ padding: "10px" }}>{nombre}</td>
-              <td style={{ padding: "10px" }}>{apellido}</td>
-              <td style={{ padding: "10px" }}>{cuil}</td>
-              <td style={{ padding: "10px" }}>{telefono}</td>
-              <td style={{ padding: "10px" }}>{mail}</td>
-              <td style={{ padding: "10px" }}>{ingresoMensual}</td>
-              <td style={{ padding: "10px" }}>{antiguedad}</td>
-              <td style={{ padding: "10px" }}>{estadoCivil}</td>
-              <td style={{ padding: "10px" }}>{ocupacion}</td>
-              <td style={{ padding: "10px" }}>{hijos}</td>
-              <td style={{ padding: "10px" }}>{endDate}</td>
-              <td style={{ padding: "10px" }}>{startDate}</td>
-              <td style={{ padding: "10px" }}>{dniFrente}</td>
-              <td style={{ padding: "10px" }}>{dniDorso}</td>
-              <td style={{ padding: "10px" }}>{retratoDni}</td>
-              <td style={{ padding: "10px" }}>
-                <a
-                  onClick={() => {
-                    setShow(true);
-                    // setSelected(e);
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  Ver documentación
-                </a>
-              </td>
-            </tr>
+            {clientesData.map((e, index) => (
+              <tr style={{ borderBottom: "1px solid black" }}>
+                <td style={{ padding: "10px" }}>{e.nombre}</td>
+                <td style={{ padding: "10px" }}>{e.apellido}</td>
+                <td style={{ padding: "10px" }}>{e.cuil}</td>
+                <td style={{ padding: "10px" }}>{e.telefono}</td>
+                <td style={{ padding: "10px" }}>{e.mail}</td>
+                <td style={{ padding: "10px" }}>{e.ingresoMensual}</td>
+                <td style={{ padding: "10px" }}>{e.antiguedad}</td>
+                <td style={{ padding: "10px" }}>{e.estadoCivil}</td>
+                <td style={{ padding: "10px" }}>{e.ocupacion}</td>
+                <td style={{ padding: "10px" }}>{e.hijos}</td>
+                <td style={{ padding: "10px" }}>{e.endDate}</td>
+                <td style={{ padding: "10px" }}>{e.startDate}</td>
+                <td style={{ padding: "10px" }}>{e.dniFrente}</td>
+                <td style={{ padding: "10px" }}>{e.dniDorso}</td>
+                <td style={{ padding: "10px" }}>{e.retratoDni}</td>
+                <td style={{ padding: "10px" }}>
+                  <a
+                    onClick={() => {
+                      setShow(true);
+                      // setSelected(e);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Ver documentación
+                  </a>
+                </td>
+              </tr>
+            ))}
+
           </tbody>
         </table>
       </div>
@@ -464,7 +420,7 @@ export default function Admin() {
               Ant
             </button>
             <button disabled={
-              (page + 1) * PAGESIZE >= records.length
+              (page + 1) * PAGESIZE >= clientesData.length
             } onClick={() => {
               setPage(page + 1)
             }}>Prev</button>
