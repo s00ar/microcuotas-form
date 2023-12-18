@@ -32,23 +32,23 @@ export default function Admin() {
   const [page, setPage] = useState(0);
   const PAGESIZE = 10
 
-
-  if (!loading && user) {
+  useEffect(() => {
     const fetchDataFromFirestore = async () => {
       try {
         const clientesCollection = collection(db, 'clientes');
         const querySnapshot = await getDocs(clientesCollection);
-        const data = [];
-        querySnapshot.forEach((doc) => {
-          data.push(doc.data());
-        });
-        setClientesData(data); // Set the state with the entire 'clientes' collection data
+        const data = querySnapshot.docs.map((doc) => doc.data());
+        setClientesData(data);
       } catch (error) {
-        console.error('Error fetching data from Firestore:', error);
+        console.error('Error fetching data from Firestore:', error.message);
       }
     };
-    fetchDataFromFirestore();
-  }
+  
+    if (!loading && user) {
+      fetchDataFromFirestore();
+    }
+  }, [loading, user]); // Include dependencies in the dependency array
+  
 
   useEffect(() => {
     console.log(page)
@@ -307,7 +307,7 @@ export default function Admin() {
           </thead>
           <tbody>
             {clientesData.map((e, index) => (
-              <tr style={{ borderBottom: "1px solid black" }}>
+              <tr key={index} style={{ borderBottom: "1px solid black" }}>
                 <td style={{ padding: "10px" }}>{e.nombre}</td>
                 <td style={{ padding: "10px" }}>{e.apellido}</td>
                 <td style={{ padding: "10px" }}>{e.cuil}</td>
@@ -318,8 +318,8 @@ export default function Admin() {
                 <td style={{ padding: "10px" }}>{e.estadoCivil}</td>
                 <td style={{ padding: "10px" }}>{e.ocupacion}</td>
                 <td style={{ padding: "10px" }}>{e.hijos}</td>
-                <td style={{ padding: "10px" }}>{e.endDate}</td>
-                <td style={{ padding: "10px" }}>{e.startDate}</td>
+                <td style={{ padding: "10px" }}>{e.fechaNacimiento}</td>
+                <td style={{ padding: "10px" }}>{e.fechaSolicitud}</td>
                 <td style={{ padding: "10px" }}>
                   <a href={e.dniFrente}>DNI Frente</a>
                 </td>
