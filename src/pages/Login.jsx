@@ -4,7 +4,6 @@ import { auth, logInWithEmailAndPassword, } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "../css/Login.css";
 import Banner from "../components/Header";
-import Footer from '../components/Footer';
 
 function Login() {
 const [email, setEmail] = useState("");
@@ -66,10 +65,6 @@ return (
             </>
         )}
         </div>
-    </div>
-
-    <div className="footer__container">
-        <Footer />
     </div>
 </div>
 

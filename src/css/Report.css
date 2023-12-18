@@ -1,3 +1,16 @@
+*{
+    outline: red 1px solid;
+    overflow:visible !important;
+}
+.filter__field{
+    /* width: 70%; */
+    display: flex;
+    justify-content: space-between;
+}
+.filter__field__container{
+    display: flex;
+    /* justify-content: center; */
+}
 .admin__logo{
     height: 160px;
 }
@@ -9,7 +22,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 60%;
+    /* width: 60%; */
 }
 .admin__title{
     color: rgb(253, 253, 253);
@@ -27,7 +40,7 @@
     width: 100%;
     flex-direction: row;
     align-items: center;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .chart__titles{
     text-align: center;

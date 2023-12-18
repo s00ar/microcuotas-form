@@ -22,7 +22,6 @@ const headerStyle = {
 
 export default function Admin() {
   const [user, loading] = useAuthState(auth);
-
   const navigate = useNavigate();
   const [clientesData, setClientesData] = useState([]);
   const [paginatedrecords, setpaginatedrecords] = useState([]);
@@ -218,15 +217,8 @@ export default function Admin() {
         </div>
       </nav>
 
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
-        <div style={{
-          width: "80%",
-          display: "flex",
-          justifyContent: "space-between"
-        }} >
+      <div className="filter__field__container">
+        <div className="filter__field">
           <div>
             <span>
               Fecha inicial: <input type={"date"} value={startDate} onChange={e => setStartDate(e.target.value)} />
@@ -234,136 +226,83 @@ export default function Admin() {
               <button onClick={filterData}>filter</button>
             </span>
           </div>
-
-          <div>
+          {/* <div>
             <button disabled={clientesData.length === 0} onClick={toExport}>Exportar CSV</button>
-          </div>
+          </div> */}
         </div>
       </div>
-      <div style={{
-        display: "flex",
-        justifyContent: "center"
-      }}>
+      <div className="filter__field__container">
         <table style={{
           borderCollapse: "collapse",
-          width: "80%"
+          width: "70%"
         }}>
           <thead>
             <tr style={{
               borderBottom: "1px solid black"
             }}>
-              <th style={{ padding: "10px" }}>Id</th>
               <th>
                 <div style={headerStyle}>
                   <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("timestamp")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("timestamp")}
-                      style={iconStyle}
-                    />
+                      Nombre
                   </div>
-                  Fecha
                 </div>
               </th>
               <th>
                 <div style={headerStyle}>
                   <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("nombre")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("nombre")}
-                      style={iconStyle}
-                    />
+                      Apellido
                   </div>
-                  Nombre
+                </div>
+              </th>
+              <th style={{ padding: "1px" }}>Cuil</th>
+              <th>
+                <div style={headerStyle}>
+                  <div>
+                    Teléfono
+                  </div>
                 </div>
               </th>
               <th>
                 <div style={headerStyle}>
                   <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("Apellido")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("Apellido")}
-                      style={iconStyle}
-                    />
+                      Email
                   </div>
-                  Apellido
                 </div>
               </th>
               <th>
                 <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("cuil")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("cuil")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  CUIL
-                </div>
-              </th>
-              <th style={{ padding: "10px" }}>Teléfono</th>
-              <th>
-                <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("mail")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("mail")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  Email
-                </div>
-              </th>
-              <th>
-                <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("ingresoMensual")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("ingresoMensual")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  Ingreso Mensual
+                  Ingreso mensual
                 </div>
               </th>
               <th style={{ padding: "10px" }}>Antiguedad</th>
+              <th style={{ padding: "10px" }}>Estado civil</th>
               <th>
                 <div style={headerStyle}>
-                  <div>
-                    <TiArrowSortedUp
-                      onClick={() => handleSortAscend("estadoCivil")}
-                      style={iconStyle}
-                    />
-                    <TiArrowSortedDown
-                      onClick={() => handleSortDescend("estadoCivil")}
-                      style={iconStyle}
-                    />
-                  </div>
-                  Estado Civil
+                  Profesión
                 </div>
               </th>
-              <th style={{ padding: "10px" }}>Ocupación</th>
-              <th style={{ padding: "10px" }}>Hijos</th>
-              <th style={{ padding: "10px" }}>Fecha de Nacimiento</th>
-              <th style={{ padding: "10px" }}>Fecha de Solicitud</th>
+              <th>
+                <div style={headerStyle}>
+                  Hijos
+                </div>
+              </th>
+              <th>
+                <div style={headerStyle}>
+                  Fecha de nacimiento
+                </div>
+              </th>
+              <th>
+                <div style={headerStyle}>
+                  Fecha de carga
+                </div>
+              </th>
+              <th style={{ padding: "10px" }}>DNI Frente</th>
+              <th style={{ padding: "10px" }}>DNI Dorso</th>
+              <th>
+                <div style={headerStyle}>
+                  Retrato + DNI
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -381,19 +320,14 @@ export default function Admin() {
                 <td style={{ padding: "10px" }}>{e.hijos}</td>
                 <td style={{ padding: "10px" }}>{e.endDate}</td>
                 <td style={{ padding: "10px" }}>{e.startDate}</td>
-                <td style={{ padding: "10px" }}>{e.dniFrente}</td>
-                <td style={{ padding: "10px" }}>{e.dniDorso}</td>
-                <td style={{ padding: "10px" }}>{e.retratoDni}</td>
                 <td style={{ padding: "10px" }}>
-                  <a
-                    onClick={() => {
-                      setShow(true);
-                      // setSelected(e);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Ver documentación
-                  </a>
+                  <a href={e.dniFrente}>DNI Frente</a>
+                </td>
+                <td style={{ padding: "10px" }}>
+                  <a href={e.dniDorso}>DNI Dorso</a>
+                </td>
+                <td style={{ padding: "10px" }}>
+                  <a href={e.retratoDni}>Retrato + DNI</a>
                 </td>
               </tr>
             ))}
@@ -453,7 +387,7 @@ export default function Admin() {
           >
             <h1>{selected.nombre}</h1>
             <p>Teléfono: {selected.telefono}</p>
-            <p>CUIL: {selected.cuil}</p>
+            <p>Ingreso: {selected.cuil}</p>
             <a href={`mailto:${selected.correo}`}>Correo electrónico</a><br />
             <p>DNI Frente</p>
             <img src={`data:image/png;base64, ${selected.dniFrente}`} alt="DNI" />
