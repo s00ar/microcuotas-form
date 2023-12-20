@@ -82,31 +82,30 @@ const isReport = async (uid) => {
 };  
 
 const fetchContactsData = async (startDate, endDate) => {
-  let q = ''
-  if(startDate && !endDate){
-      q = query(collection(db, "contacts") ,orderBy('timestamp', "desc"),where('timestamp', '>=', new Date(startDate)))
-  }
-  else if(!startDate && endDate){
-      q = query(collection(db, "contacts") ,orderBy('timestamp', "desc"),where('timestamp', '<=', new Date(endDate)))
-  }
-  else if(startDate && endDate){
-      q = query(collection(db, "contacts") ,orderBy('timestamp', "desc"), 
-          where('timestamp', '>', new Date(startDate)),
-          where('timestamp', '<', new Date(endDate))
-      );
-  }
-  else {
-      q = query(collection(db, "contacts") ,orderBy('timestamp', "desc"))
+  let q = collection(db, "clientes");
+  
+  if (startDate && !endDate) {
+    q = query(q, orderBy('timestamp', 'desc'), where('timestamp', '>=', new Date(startDate)));
+  } else if (!startDate && endDate) {
+    q = query(q, orderBy('timestamp', 'desc'), where('timestamp', '<=', new Date(endDate)));
+  } else if (startDate && endDate) {
+    q = query(q, orderBy('timestamp', 'desc'), 
+      where('timestamp', '>', new Date(startDate)),
+      where('timestamp', '<', new Date(endDate))
+    );
+  } else {
+    q = query(q, orderBy('timestamp', 'desc'));
   }
 
   const querySnapshot = await getDocs(q);
   let data = [];
   querySnapshot.forEach((doc) => {
-  data.push(doc.data());
+    data.push(doc.data());
   });
-  console.log({ data });
+  // console.log({ data });
   return data;
 };
+
 
 const logout = () => {
 signOut(auth);
