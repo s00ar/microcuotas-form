@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { storage, db } from '../firebase';
 import '../css/ClientForm.css';
 import Banner from "../components/Header";
-import Footer from '../components/Footer';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
@@ -330,9 +329,6 @@ function ClientForm(props) {
 
         </div>
       </form>
-      <div className="footer__container">
-        <Footer />
-      </div>
     </div>
   );
 };

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import Banner from "../components/Header";
-import Footer from '../components/Footer';
 
 function Verification(props) {
   const navigate = useNavigate();
@@ -97,59 +96,62 @@ function Verification(props) {
         <Banner />
       </div>
       <div className="verification__container">
-        <div className="row">
-          <h2>
-            Por favor ingresa tu cuil
-          </h2>
-          <input
-            className="verification__input"
-            type="text"
-            placeholder="Ingresa tu cuil"
-            onChange={(e) => setCuil(e.target.value)}
-          />
-          <h2 htmlFor="cuotas">Cantidad de Cuotas:</h2>
-          <input
-            className="verification__input"
-            placeholder="6 cuotas"
-            id="cuotas"
-            type="number"
-            min="2"
-            max={clienteRecurrente ? 12 : 6}
-            value={cuotas}
-            onChange={handleCuotasChange}
-          />
-          <h2 htmlFor="monto">Monto Solicitado:</h2>
-          <input
-            className="verification__input"
-            placeholder="$100.000 pesos"
-            id="monto"
-            type="number"
-            min="10000"
-            step="10000"
-            max={clienteRecurrente ? 200000 : 100000}
-            value={monto}
-            onChange={handleMontoChange}
-          />
-          <h2>
-            Cliente Recurrente
-          </h2>
+        <div className="verification__container__leftpanel">
+            <h2>
+              Por favor ingresa tu cuil
+            </h2>
             <input
-              type="checkbox"
-              checked={clienteRecurrente}
-              onChange={handleClienteRecurrente}
-            />
-          {cuilError && <span className="error">{cuilError}</span>}
-              <button
-                className="btn"
-                onClick={checkCuilAvailability}
-                >Solicitar crédito
-              </button>
+              className="verification__input"
+              type="text"
+              placeholder="Ingresa tu cuil"
+              onChange={(e) => setCuil(e.target.value)}
+              />
+            <h2 htmlFor="cuotas">Cantidad de Cuotas:</h2>
+            <input
+              className="verification__input"
+              placeholder="6 cuotas"
+              id="cuotas"
+              type="number"
+              min="2"
+              max={clienteRecurrente ? 12 : 6}
+              value={cuotas}
+              onChange={handleCuotasChange}
+              />
+            <h2 htmlFor="monto">Monto Solicitado:</h2>
+            <input
+              className="verification__input"
+              placeholder="$100.000 pesos"
+              id="monto"
+              type="number"
+              min="10000"
+              step="10000"
+              max={clienteRecurrente ? 200000 : 100000}
+              value={monto}
+              onChange={handleMontoChange}
+              />
             </div>
-          </div>
-        
-      <div className="footer__container">
-        <Footer />
-      </div>
+          <div className="verification__container__rightpanel">
+            <div className="row">
+              <label>
+                ¿Es usted un cliente recurrente?
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  checked={clienteRecurrente}
+                  onChange={handleClienteRecurrente}
+                  />
+              </label>
+              </div>
+              <div className="row">
+                <button
+                  className="btn"
+                  onClick={checkCuilAvailability}
+                  >Solicitar crédito
+                </button>
+                </div>
+            </div>
+        </div>
+                {cuilError && alert(cuilError)}
     </div>
   );
 }
