@@ -6,11 +6,13 @@ import Footer from '../components/Footer';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import cuilContext from '../App'; 
+import { useContext } from 'react';
 
-function ClientForm(props) {
+const ClientForm = () => {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
+  const cuil = useContext(cuilContext); // Obtiene el valor del contexto
   const [telefono, setTelefono] = useState('');
   const [telefonoLab, setTelefonoLab] = useState('');
   const [mail, setMail] = useState('');
@@ -23,8 +25,6 @@ function ClientForm(props) {
   const [dniFrente, setDniFrente] = useState(null);
   const [dniDorso, setDniDorso] = useState(null);
   const [retratoDni, setRetratoDni] = useState(null);
-  const location = useLocation();
-  const { cuil, monto, cuotas } = location.state;
   const navigate = useNavigate();
 
   const handleNombreChange = (e) => {
@@ -44,11 +44,16 @@ function ClientForm(props) {
   };
 
   const handleTelefonoLabChange = (e) => {
-    if (!isNaN(Number(e.target.value)) ) {
-      setTelefonoLab(e.target.value);
-      } else {
-        alert("El campo de teléfono debe ser un número");
-      }
+    const value = e.target.value;
+
+    // Verifica que el valor sea un número de teléfono de Argentina
+    if (!value.match(/^[11|15]\d{9}$/)) {
+      alert("El campo de teléfono laboral debe ser un número de Argentina");
+      return;
+    }
+  
+    // Setea el valor
+    setTelefonoLab(value);
   };
 
   const handleMailChange = (e) => {
@@ -108,8 +113,6 @@ function ClientForm(props) {
       !telefono ||
       !telefonoLab ||
       !mail ||
-      !monto ||
-      !cuotas ||
       !estadoCivil ||
       !hijos ||
       !ocupacion ||
@@ -121,17 +124,10 @@ function ClientForm(props) {
       !dniDorso ||
       !retratoDni
     ) {
-      alert('Por favor completar todos los campos');
+      alert('Please fill all the fields');
       return;
     }
-    if (!telefono.match(/^[11|15]\d{9}$/)) {
-      alert("El campo de teléfono debe ser un número de Argentina");
-      return;
-    }
-    if (!telefonoLab.match(/^[11|15]\d{9}$/)) {
-      alert("El campo de teléfono laboral debe ser un número de Argentina");
-      return;
-    }
+
     try {
       // Upload images to Firebase Storage
       const dniFrenteRef = ref(storage, `documentos/${dniFrente.name}`);
@@ -158,8 +154,6 @@ function ClientForm(props) {
         nombre,
         apellido,
         cuil,
-        monto,
-        cuotas,
         telefono,
         telefonoLab,
         mail,
@@ -191,7 +185,7 @@ function ClientForm(props) {
       setDniDorso(null);
       setRetratoDni(null);
 
-      alert('Datos registrados exitosamente!');
+      alert('Data submitted successfully!');
       navigate("/");
 
     } catch (error) {
@@ -210,26 +204,6 @@ function ClientForm(props) {
       <form onSubmit={handleSubmit}>
         <div className='form__container' >
           <div className='form__container__leftpanel'>
-            <h3 className='user__data'>
-            <label>
-              CUIL:
-              <span>{cuil}</span>
-            </label>
-            </h3>
-
-            <h3 className='user__data'>
-            <label>
-              MONTO:
-              <span>{monto}</span>
-            </label>
-            </h3>
-
-            <h3 className='user__data'>
-            <label>
-              CUOTAS:
-              <span>{cuotas}</span>
-            </label>
-            </h3>
 
             <label>
               Nombre:
@@ -240,6 +214,11 @@ function ClientForm(props) {
             <label>
               Apellido:
               <input type="text" value={apellido} onChange={handleApellidoChange} />
+            </label>
+
+            <label>
+              CUIL:
+              <p>{cuil}</p>
             </label>
             <label>
               Teléfono laboral:
@@ -268,8 +247,6 @@ function ClientForm(props) {
               </select>
             </label>
 
-          </div>
-          <div className='form__container__rightpanel'>
             <label>
               Hijos:
               <select value={hijos} onChange={handleHijosChange}>
@@ -278,6 +255,8 @@ function ClientForm(props) {
                 <option value="false">No</option>
               </select>
             </label>
+          </div>
+          <div className='form__container__rightpanel'>
 
             <label>
               Ocupación:

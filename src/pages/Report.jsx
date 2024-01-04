@@ -100,11 +100,13 @@ export default function Admin() {
       "cuil",
       "telefono",
       "mail",
+      "monto",
+      "cuotas",
       "estadoCivil",
       "hijos",
       "ocupacion",
       "ingresoMensual",
-      "antiguedad",
+      "fechaIngreso",
       "fechaNacimiento",
       "fechaSolicitud",
       "dniFrente",
@@ -119,17 +121,19 @@ export default function Admin() {
       _[2] = e.cuil
       _[3] = e.telefono
       _[4] = e.mail
-      _[5] = `"${e.estadoCivil}"`
-      _[6] = e.hijos ? e.hijos : ""
-      _[7] = `"${e.ocupacion}"`
-      _[8] = e.ingresoMensual
-      _[9] = `"${e.antiguedad}"`
-      _[10] = `"${e.fechaNacimiento}"`
-      _[11] = getTime(e.timestamp)
-      _[12] = e.dniFrente
-      _[13] = e.dniDorso
-      _[14] = e.retratoDni
-      _[15] = "\n"
+      _[5] = e.monto
+      _[6] = e.cuotas
+      _[7] = `"${e.estadoCivil}"`
+      _[8] = e.hijos ? e.hijos : ""
+      _[9] = `"${e.ocupacion}"`
+      _[10] = e.ingresoMensual
+      _[11] = `"${e.fechaIngreso}"`
+      _[12] = `"${e.fechaNacimiento}"`
+      _[13] = getTime(e.timestamp)
+      _[14] = e.dniFrente
+      _[15] = e.dniDorso
+      _[16] = e.retratoDni
+      _[17] = "\n"
       return _
     })
     var pom = document.createElement('a');
@@ -276,10 +280,24 @@ export default function Admin() {
               </th>
               <th>
                 <div style={headerStyle}>
+                  <div>
+                      Monto
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div style={headerStyle}>
+                  <div>
+                      Cuotas
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div style={headerStyle}>
                   Ingreso mensual
                 </div>
               </th>
-              <th style={{ padding: "10px" }}>Antiguedad</th>
+              <th style={{ padding: "10px" }}>Fecha de Ingreso</th>
               <th style={{ padding: "10px" }}>Estado civil</th>
               <th>
                 <div style={headerStyle}>
@@ -318,11 +336,13 @@ export default function Admin() {
                 <td style={{ padding: "10px" }}>{e.cuil}</td>
                 <td style={{ padding: "10px" }}>{e.telefono}</td>
                 <td style={{ padding: "10px" }}>{e.mail}</td>
+                <td style={{ padding: "10px" }}>{e.monto}</td>
+                <td style={{ padding: "10px" }}>{e.cuotas}</td>
                 <td style={{ padding: "10px" }}>{e.ingresoMensual}</td>
-                <td style={{ padding: "10px" }}>{e.antiguedad}</td>
+                <td style={{ padding: "10px" }}>{e.fechaIngreso}</td>
                 <td style={{ padding: "10px" }}>{e.estadoCivil}</td>
                 <td style={{ padding: "10px" }}>{e.ocupacion}</td>
-                <td style={{ padding: "10px" }}>{e.hijos}</td>
+                <td style={{ padding: "10px" }}>{e.hijos === "true" ? "si" : "no"}</td>
                 <td style={{ padding: "10px" }}>{e.fechaNacimiento}</td>
                 <td style={{ padding: "10px" }}>{e.fechaSolicitud}</td>
                 <td style={{ padding: "10px" }}>

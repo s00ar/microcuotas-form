@@ -1,33 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { createContext, useContext } from 'react';
 import Login from "./pages/Login";
 import Reset from "./pages/Reset";
 import Register from "./pages/Register";
 import Report from "./pages/Report";
 import Verification from "./pages/Verification";
-import ClientForm from './pages/ClientForm';
-import './css/App.css';
+import "./css/App.css";
 import firebaseApp from "./firebase";
+import ClientForm from "./pages/ClientForm";
 
 const App = () => {
   const [cuil, setCuil] = useState("");
 
-
   return (
     <div>
-    <div className="App">
+      <div className="App">
         <Router basename={process.env.PUBLIC_URL}>
           <Routes>
-            <Route exact path="/" element={<Verification/>} />
-            <Route path="/clientform" element={<ClientForm cuil={cuil} />} /> {/* Pass cuil as a prop */}
+            <Route exact path="/" element={<Verification />} />
+            <Route path="/clientform" element={<ClientForm />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/reset" element={<Reset />} />
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/report" element={<Report />} />
           </Routes>
         </Router>
-        </div>
+      </div>
     </div>
   );
 };

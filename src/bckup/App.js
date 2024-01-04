@@ -6,21 +6,24 @@ import Reset from "./pages/Reset";
 import Register from "./pages/Register";
 import Report from "./pages/Report";
 import Verification from "./pages/Verification";
-import ClientForm from './pages/ClientForm';
 import './css/App.css';
 import firebaseApp from "./firebase";
+import ClientForm from './pages/ClientForm';
 
 const App = () => {
   const [cuil, setCuil] = useState("");
-
+  // Create a context for the cuil state and dispatch function
+  const CuilContext = createContext();
+  //create a context for a standard value
+  // const cuilContext = React.createContext();
 
   return (
-    <div>
+    <CuilContext.Provider value={{ cuil, setCuil }}>
     <div className="App">
         <Router basename={process.env.PUBLIC_URL}>
           <Routes>
-            <Route exact path="/" element={<Verification/>} />
-            <Route path="/clientform" element={<ClientForm cuil={cuil} />} /> {/* Pass cuil as a prop */}
+            <Route exact path="/" element={<Verification />} />
+            <Route path="/clientform" element={<ClientForm />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/reset" element={<Reset />} />
             <Route exact path="/register" element={<Register />} />
@@ -28,7 +31,7 @@ const App = () => {
           </Routes>
         </Router>
         </div>
-    </div>
+    </CuilContext.Provider>
   );
 };
 

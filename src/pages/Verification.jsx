@@ -1,26 +1,36 @@
 import "../css/Verification.css";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import Banner from "../components/Header";
 import Footer from '../components/Footer';
 
-function Verification() {
+function Verification(props) {
   const navigate = useNavigate();
   const [cuil, setCuil] = useState("");
-
-  const [cuilError, setCuilError] = useState("");
+  const [cuilError, setCuilError] = useState('');
+  const [cuotas, setCuotas] = useState('');
+  const [monto, setMonto] = useState('');
+  const [clienteRecurrente, setClienteRecurrente] = useState(false);
 
   const checkCuilAvailability = async () => {
     try {
       if (!cuil) {
-        alert("CUIL field is empty");
+        alert("CUIL no puede estar en blanco");
+        return;
+      }
+      if (!monto) {
+        alert("El monto no puede estar en blanco");
+        return;
+      }
+      if (!cuotas) {
+        alert("La cantidad de cuotas no puede estar en blanco");
         return;
       }
 
       if (cuil.length !== 11) {
-        alert("CUIL should have 11 characters");
+        alert("Ingresa un CUIL válido");
         return;
       }
 
@@ -37,10 +47,10 @@ function Verification() {
             const last30Days = 30 * 24 * 60 * 60 * 1000; //Equal to 30 days
 
             if (Date.now() - timestamp < last30Days) {
-              setCuilError("CUIL already registered within the last 30 days. You can only submit one form every 30 days.");
+              setCuilError("El CUIL ya fué registrado en los últimos 30 días. Solamente se puede ingresar una solicitud cada 30 días.");
             } else {
               setCuilError("");
-              navigate("/clientform");
+              navigate("/clientform", { state: { cuil } });
             }
           } else {
             console.error('Timestamp is undefined for document with CUIL:', cuil);
@@ -49,13 +59,37 @@ function Verification() {
       } else {
         // CUIL is not present in the database
         setCuilError("");
-        navigate("/clientform");
+        navigate("/clientform", { state: { cuil, cuotas, monto } });
       }
     } catch (error) {
       console.error('Error checking CUIL availability:', error);
       // Handle the error as needed
     }
   };
+
+  const handleCuotasChange = (e) => {
+    const newValue = e.target.value;
+    if (!clienteRecurrente && newValue >= 2 && newValue <= 6) {
+      setCuotas(newValue);
+    } else if (clienteRecurrente && newValue >= 2 && newValue <= 12) {
+      setCuotas(newValue);
+    }
+  };
+
+  const handleMontoChange = (e) => {
+    const newValue = e.target.value;
+    if (!clienteRecurrente && newValue >= 10000 && newValue <= 100000) {
+      setMonto(newValue);
+    } else if (clienteRecurrente && newValue >= 10000 && newValue <= 200000) {
+      setMonto(newValue);
+    }
+  };
+
+  const handleClienteRecurrente = () => {
+    setClienteRecurrente(!clienteRecurrente);
+    setMonto(""); 
+    setCuotas("");
+  }
 
   return (
     <div>
@@ -65,24 +99,54 @@ function Verification() {
       <div className="verification__container">
         <div className="row">
           <h2>
-            Antes de comenzar por favor ingresa tu cuil
+            Por favor ingresa tu cuil
           </h2>
-        </div>
-        <div className="row">
           <input
             className="verification__input"
             type="text"
-            placeholder="cuil"
+            placeholder="Ingresa tu cuil"
             onChange={(e) => setCuil(e.target.value)}
           />
+          <h2 htmlFor="cuotas">Cantidad de Cuotas:</h2>
+          <input
+            className="verification__input"
+            placeholder="6 cuotas"
+            id="cuotas"
+            type="number"
+            min="2"
+            max={clienteRecurrente ? 12 : 6}
+            value={cuotas}
+            onChange={handleCuotasChange}
+          />
+          <h2 htmlFor="monto">Monto Solicitado:</h2>
+          <input
+            className="verification__input"
+            placeholder="$100.000 pesos"
+            id="monto"
+            type="number"
+            min="10000"
+            step="10000"
+            max={clienteRecurrente ? 200000 : 100000}
+            value={monto}
+            onChange={handleMontoChange}
+          />
+          <h2>
+            Cliente Recurrente
+          </h2>
+            <input
+              type="checkbox"
+              checked={clienteRecurrente}
+              onChange={handleClienteRecurrente}
+            />
           {cuilError && <span className="error">{cuilError}</span>}
-          <button
-            className="btn"
-            onClick={checkCuilAvailability}
-          >Solicitar crédito
-          </button>
-        </div>
-      </div>
+              <button
+                className="btn"
+                onClick={checkCuilAvailability}
+                >Solicitar crédito
+              </button>
+            </div>
+          </div>
+        
       <div className="footer__container">
         <Footer />
       </div>

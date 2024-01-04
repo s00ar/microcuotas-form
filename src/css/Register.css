@@ -37,13 +37,11 @@
 }
 .register__helpText--success{
     background-color: green;
-    color: #dcdcdc;
     font-weight: bolder;
     font-size: 2rem;
 }
 .register__helpText--error{
     background-color: red;
-    color: #dcdcdc;
     font-weight: bolder;
     font-size: 1.2rem;
 }
@@ -61,7 +59,6 @@
     width: 50vw;
     flex-direction: column;
     text-align: center;
-    background-color: #dcdcdc;
     padding: 30px;
 }
 .register__textBox {
@@ -78,7 +75,6 @@
     background-color: black;
 }
 .register__google {
-    background-color: #E36F1E ;
 }
 .register div {
     margin-top: 7px;

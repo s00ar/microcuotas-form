@@ -1,4 +1,11 @@
 /* styles.css */
+.user__data {
+  padding: 0.6rem 0 0.6rem 0;
+}
+.statement__text{
+  padding: 0 0 0 1rem;
+  margin: 1rem;
+}
 .firsth1{
   margin-top: 1rem;
 }
