@@ -346,13 +346,13 @@ export default function Admin() {
                 <td style={{ padding: "10px" }}>{e.fechaNacimiento}</td>
                 <td style={{ padding: "10px" }}>{e.fechaSolicitud}</td>
                 <td style={{ padding: "10px" }}>
-                  <a href={e.dniFrente}>DNI Frente</a>
+                  <a target="_blank" href={e.dniFrente}>DNI Frente</a>
                 </td>
                 <td style={{ padding: "10px" }}>
-                  <a href={e.dniDorso}>DNI Dorso</a>
+                  <a target="_blank" href={e.dniDorso}>DNI Dorso</a>
                 </td>
                 <td style={{ padding: "10px" }}>
-                  <a href={e.retratoDni}>Retrato + DNI</a>
+                  <a target="_blank" href={e.retratoDni}>Retrato + DNI</a>
                 </td>
               </tr>
             ))}
